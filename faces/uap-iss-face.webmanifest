@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 UAP ISS Edition \u00b7 Apex Universal",
+ "short_name": "UAP ISS Edition",
+ "description": "ISS edition V1: REAL live ISS telemetry (wheretheiss.at) + weather + clock + comms doors. Honest NO FEED when the feed is unreachable \u2014 never simulated.",
+ "start_url": "uap-iss-face.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

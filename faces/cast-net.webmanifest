@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Cast Net \u00b7 Apex Universal",
+ "short_name": "Cast Net",
+ "description": "Cast Net (Nov 10, 2026) - Package Scope Inspector BUILD ORDER BO-2a (Specimen One, the Cast Net Package, verdict BOUNCE: the called app does not yet exist as a build; the face half fits today): the face that opens the net. THE TEAM LAW (owner): the face tells time and CALLS its teammate; the app is ",
+ "start_url": "cast-net.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

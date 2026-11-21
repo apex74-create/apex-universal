@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Betta Ultra Deluxe City \u00b7 Apex Universal",
+ "short_name": "Betta Ultra Deluxe City",
+ "description": "Betta Ultra Deluxe V3.1 \u2014 CITY PLATE BACKDROP variant (Nov 10, 2026; Package Scope Inspector BO-3 plate swap). Only the <g id=\"tankBackdrop\"> contents differ from the base face: Hierographic Plate 2 (the City, 918x2048 phone shot) seated in the apex-backdrop-slot as an embedded raster \u2014 the art live",
+ "start_url": "betta-city.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

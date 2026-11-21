@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Betta Ultra Deluxe Reef \u00b7 Apex Universal",
+ "short_name": "Betta Ultra Deluxe Reef",
+ "description": "Betta Ultra Deluxe V3.1 \u2014 DEEP REEF BACKDROP variant (Nov 10, 2026), the demonstration swap for the apex-backdrop-slot: only the <g id=\"tankBackdrop\"> contents differ from the base face \u2014 a deep-water reef backdrop (called teal depth gradient, surface light rays, reef silhouette shelves, coral branc",
+ "start_url": "betta-ultra-deluxe-reef.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

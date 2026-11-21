@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Waterfall LIVE \u00b7 SCOPE \u00b7 Apex Universal",
+ "short_name": "Waterfall LIVE \u00b7 SCOPE",
+ "description": "The SCOPE build whose frozen copy is Lokmat's Kit (snapshot SHA-256 ce7f9241\u2026, byte-identical to this source). The snapshot file itself is never edited or moved; this is the live source build.",
+ "start_url": "scope.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

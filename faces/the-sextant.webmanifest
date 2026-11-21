@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 The Sextant \u00b7 Apex Universal",
+ "short_name": "The Sextant",
+ "description": "The Sextant (Nov 16, 2026) - a navigation-instrument face in the Digiframe template line (folder B9): brass horizon dome, computed sun, moon and 20-star sky from the real clock and a named position input, sidereal time, and a fix labelled COMPUTED with its inputs named on the face. Position input: t",
+ "start_url": "the-sextant.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

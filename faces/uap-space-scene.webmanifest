@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 UAP Space Scene \u00b7 Apex Universal",
+ "short_name": "UAP Space Scene",
+ "description": "UAP Space Scene V2 (Nov 10, 2026) - owner's V2 brief (20:27-20:28 EST) on the V1 living sky. Galaxies: faster spin, four arms stretched longer, drawn in overlapping layered passes so they read dimensional, and the whole galaxy breathes - grows with a pulse and recedes. THE POPULATION IS ORGANIC: spa",
+ "start_url": "uap-space-scene.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

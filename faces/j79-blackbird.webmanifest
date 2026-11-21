@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 J79 Blackbird \u00b7 Apex Universal",
+ "short_name": "J79 Blackbird",
+ "description": "Motors Under Glass series: the GE J79 single-spool turbojet, with the clock.",
+ "start_url": "j79-blackbird.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

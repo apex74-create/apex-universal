@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Glass House Flagship Machinery \u00b7 Apex Universal",
+ "short_name": "Glass House Flagship Mac",
+ "description": "The working-machinery build of the flagship: the plate's gears turn on House Standard Train H-1 at true ratios \u2014 centre 3600 s, third 450 s, fourth 60 s, escape 5 s \u2014 with the fish swimming in the machine.",
+ "start_url": "glass-house-flagship-machinery.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

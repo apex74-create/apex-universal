@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Hot Rod Rat Rod \u00b7 Apex Universal",
+ "short_name": "Hot Rod Rat Rod",
+ "description": "Hot Rod Line (Nov 20, 2026): an original Apex monster in a rusty blown rat rod \u2014 the Rat Fink-era t-shirt graphic style, a house-original monster, never the copyrighted character \u2014 with a compass dial and the time in analog and digital.",
+ "start_url": "hotrod-ratrod.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

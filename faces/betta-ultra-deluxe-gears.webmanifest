@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Betta Ultra Deluxe Gears \u00b7 Apex Universal",
+ "short_name": "Betta Ultra Deluxe Gears",
+ "description": "Betta Ultra Deluxe V3.1 \u2014 GRINDING GEARS variant (Nov 10, 2026). The Apex Frame edition plus a three-gear meshing train under the yin-yang disc (centres (250,410) (301,410) (352,410); pitch radii 30/21/30, centre distances equal to pitch sums so the teeth truly mesh; teeth 14/10/14, directions alter",
+ "start_url": "betta-ultra-deluxe-gears.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

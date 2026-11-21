@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>APEX — Barracuda V8 · Motors Under Glass</title>
+<style>
+  /* BARRACUDA V8 FACE v2 (Nov 13, 2026) — MOTOR LINE PILOT
+     (PISTON/MECHANICAL). The treatment, per the owner's design lead
+     change (Nov 13, 03:19) and Addition 1: the crankshaft rotational
+     side view, touch flips to it, and in that view THE GEAR TRAIN
+     POPS OUT PRESENT — the actual timing assignment, visible and
+     working. The V12 fix is the reference; this pilot proves the
+     touch-and-gears pattern where the delta was smallest.
+       · OPENS on the CRANKSHAFT END view: the crank pulley is the
+         rotational hero, turning at idle with its bolt circle and
+         belt; the alternator pulley counter-posed at the geared
+         30:14 ratio; the two banks rise at the TRUE 90° V (±45°).
+       · THE TIMING GEARS, present in the end view: crank gear 20T
+         on the crank axis, cam gear 40T in the valley above it,
+         meshing at the true 2:1 (cam at half crank speed, counter-
+         rotating), and the distributor drive gear riding the cam
+         shaft at cam speed — the horological assignment of a
+         pushrod V8, drawn as line geometry and turning.
+       · TIPS to the FRONT view (the founding motor's working face):
+         real geared pulleys, the belt drawn as a MOVING line, and
+         the firing re-encoded to the TRUE Mopar order
+         1-8-4-3-6-5-7-2 — a spark line runs from the distributor
+         down the drawn plug lead to the cylinder actually firing,
+         in both views, as a pure function of absolute time.
+       · TOUCH flips end ↔ front. Touch is never ignition.
+     BEHAVIOUR (the Nov 13 law, as on the V12 reference): AUTO-START
+     on show; run bound to the host window's timeout (host global →
+     address → 30 s fallback, reported by window.__governor);
+     sleeps when unobserved; at rest, a still frame posed from
+     absolute time. House-drawn interpretation only — no badges, no
+     logos. Colour CALLED from the palette — solids, never layered. */
+  :root{
+    --void:#060505;        /* bay depth */
+    --plate:#100e0d;       /* warm bay plate */
+    --seam:#211d1a;        /* bay seams */
+    --brass:#c9a227; --brass-hi:#e8c85a; --brass-lo:#8a6d1c;
+    --steel:#9fb4c0; --steel-hi:#d7e6ee; --steel-lo:#5d7180;
+    --alloy:#c8ccd2; --alloy-lo:#7d838c;
+    --bay:#ff6a1a;         /* engine-paint orange, a called solid */
+    --laser:#57e6ff;
+    --digit:#ffb52e;
+    --cream:#f5ead2;
+    --spark:#ffd92e;       /* the spark line */
+    --panel:#000000;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--void)}
+  body{font-family:ui-monospace,Menlo,Consolas,monospace;
+    -webkit-user-select:none;user-select:none;cursor:pointer}
+  #face{position:absolute;inset:0;background:var(--plate)}
+  #boreWrap{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
+    width:92vmin;height:92vmin}
+  svg{width:100%;height:100%;display:block}
+  .lbl{position:absolute;width:100%;text-align:center;color:var(--cream);
+    letter-spacing:.22em;font-weight:700}
+  #motorLbl{top:2.2vmin;font-size:3.4vmin;color:var(--brass-hi)}
+  #specLbl{top:6.4vmin;font-size:2.0vmin;color:var(--steel)}
+  #readPanel{position:absolute;left:50%;bottom:3.2vmin;transform:translateX(-50%);
+    background:var(--panel);border:2px solid var(--brass);border-radius:1.6vmin;
+    padding:0.8vmin 3.4vmin 1.2vmin;text-align:center}
+  #clock{font-size:11.5vmin;font-weight:800;color:var(--digit);line-height:1;
+    letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  #dateLine{font-size:2.6vmin;color:var(--cream);letter-spacing:.18em;margin-top:0.6vmin}
+  #wxLine{font-size:2.2vmin;color:var(--steel);letter-spacing:.16em;margin-top:0.5vmin}
+  #stateLamp{position:absolute;right:3vmin;bottom:3.4vmin;font-size:2.0vmin;
+    color:var(--steel);letter-spacing:.14em;text-align:right}
+  body.live #stateLamp{color:var(--laser)}
+</style>
+
+<link rel="manifest" href="barracuda.webmanifest">
+<meta name="theme-color" content="#07130b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Barracuda">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<!-- apex-universal-container v1 -->
+</head>
+<body>
+<div id="face">
+  <div id="motorLbl" class="lbl">BARRACUDA&nbsp;V8</div>
+  <div id="specLbl" class="lbl">CRANKSHAFT END · TIMING GEARS 2:1</div>
+  <div id="boreWrap"><svg id="bore" viewBox="0 0 400 400" aria-label="V8 engine: crankshaft end view with timing gears, tipping to the front view under glass"></svg></div>
+  <div id="readPanel"><div id="clock">--:--</div><div id="dateLine">—</div><div id="wxLine">SKY — · —</div></div>
+  <div id="stateLamp">REST</div>
+</div>
+
+<script>
+"use strict";
+/* Palette in code — the same called colours as the CSS block. */
+var PAL = { brass:"#c9a227", brassHi:"#e8c85a", brassLo:"#8a6d1c",
+  steel:"#9fb4c0", steelHi:"#d7e6ee", steelLo:"#5d7180",
+  alloy:"#c8ccd2", alloyLo:"#7d838c", bay:"#ff6a1a", laser:"#57e6ff",
+  spark:"#ffd92e", seam:"#211d1a", void:"#060505" };
+var NS = "http://www.w3.org/2000/svg";
+function el(name, attrs, parent){
+  var n = document.createElementNS(NS, name);
+  for(var k in attrs) n.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(n);
+  return n;
+}
+function polar(cx, cy, r, deg){
+  var a = (deg-90) * Math.PI/180;
+  return [cx + r*Math.cos(a), cy + r*Math.sin(a)];
+}
+function rotPt(x, y, cx, cy, deg){
+  var a = deg * Math.PI/180, dx = x-cx, dy = y-cy;
+  return [cx + dx*Math.cos(a) - dy*Math.sin(a),
+          cy + dx*Math.sin(a) + dy*Math.cos(a)];
+}
+function clamp01(v){ return v<0 ? 0 : (v>1 ? 1 : v); }
+function easeIO(t){ t = clamp01(t); return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2, 2)/2; }
+/* A gear as line geometry: trapezoid teeth on a pitch circle. The
+   teeth count IS the assignment — crank 20T drives cam 40T, so the
+   cam turns at exactly half crank speed, counter-rotating. */
+function gearPath(cx, cy, teeth, rPitch){
+  var mod = 2*rPitch/teeth, rOut = rPitch + mod*0.85, rRoot = rPitch - mod*0.85;
+  var step = 360/teeth, pts = [], i, a;
+  for(i=0; i<teeth; i++){
+    a = i*step;
+    [[a, rRoot], [a+step*0.30, rRoot], [a+step*0.42, rOut],
+     [a+step*0.58, rOut], [a+step*0.70, rRoot]].forEach(function(pr){
+      var p = polar(cx, cy, pr[1], pr[0]);
+      pts.push(p[0].toFixed(1)+","+p[1].toFixed(1));
+    });
+  }
+  return "M "+pts.join(" L ")+" Z";
+}
+function makeGear(parent, cx, cy, teeth, rPitch, colour, width){
+  var g = el("g", {}, parent);
+  el("path", {d:gearPath(cx, cy, teeth, rPitch), fill:"none",
+    stroke:colour, "stroke-width":width || 2, "stroke-linejoin":"round"}, g);
+  el("circle", {cx:cx, cy:cy, r:Math.max(3, rPitch*0.30), fill:"none",
+    stroke:colour, "stroke-width":1.4}, g);
+  el("circle", {cx:cx, cy:cy, r:2.2, fill:colour, stroke:"none"}, g);
+  return g;
+}
+
+var svg = document.getElementById("bore");
+var CX = 200, CY = 200;
+
+/* ---- Bay plate seams (this motor's own backdrop) -------------------- */
+[-110, 110].forEach(function(off){
+  el("line", {x1:CX+off, y1:56, x2:CX+off, y2:344, stroke:PAL.seam, "stroke-width":2}, svg);
+  el("line", {x1:56, y1:CY+off, x2:344, y2:CY+off, stroke:PAL.seam, "stroke-width":2}, svg);
+});
+
+/* ---- Bezel: brass ring, degree ticks, cardinal points, hour numerals
+   (the mariner treatment rides every face in this series). ---------- */
+el("circle", {cx:CX, cy:CY, r:196, fill:"none", stroke:PAL.brassLo, "stroke-width":7}, svg);
+var hdgRing = el("circle", {cx:CX, cy:CY, r:188, fill:"none", stroke:PAL.brass, "stroke-width":2.5}, svg);
+for(var d=0; d<360; d+=6){
+  var big = (d % 30 === 0), p1 = polar(CX, CY, big?176:181, d), p2 = polar(CX, CY, 186, d);
+  el("line", {x1:p1[0], y1:p1[1], x2:p2[0], y2:p2[1],
+    stroke: big?PAL.brassHi:PAL.brassLo, "stroke-width": big?2.4:1.2}, svg);
+}
+var hdgNorth = null;
+["N","E","S","W"].forEach(function(card, i){
+  var p = polar(CX, CY, 165, i*90);
+  var t = el("text", {x:p[0], y:p[1]+5, "text-anchor":"middle",
+    fill:PAL.brassHi, "font-size":15, "font-weight":800,
+    "font-family":"ui-monospace,Menlo,Consolas,monospace"}, svg);
+  t.textContent = card;
+  if(card === "N") hdgNorth = t;
+});
+/* ---- Heading witness (Face Law 2): a needle inside the dial that
+   points at the stack's live heading, or sweeps in SEARCHING. The
+   cardinals above stay where the bezel's geometry puts them - the
+   witness, not the paint, carries the truth. Stack = the firewalled
+   script at the end of this file. ------------------------------- */
+var hdgNeedle = el("line", {x1:CX, y1:CY-138, x2:CX, y2:CY-118,
+  stroke:"#ff3d00", "stroke-width":3.4, "stroke-linecap":"round"}, svg);
+window.__hdgTargets = { needle:hdgNeedle, ring:hdgRing, north:hdgNorth,
+  cx:CX, cy:CY, green:PAL.brassHi, yellow:"#ffb52e", red:"#ff3d00" };
+for(var h=1; h<=12; h++){
+  var hp = polar(CX, CY, 147, h*30);
+  var ht = el("text", {x:hp[0], y:hp[1]+4.5, "text-anchor":"middle",
+    fill:"#f5ead2", "font-size":11, "font-weight":700,
+    "font-family":"ui-monospace,Menlo,Consolas,monospace"}, svg);
+  ht.textContent = String(h);
+}
+
+/* =====================================================================
+   THE STAGE — two views of the same motor. END view (the crankshaft
+   end, timing gears present) opens and TIPS up to the FRONT view,
+   the working face. view.mix is the tip: 0 = end, 1 = front.
+   ===================================================================== */
+var stage = el("g", {}, svg);
+var viewEnd = el("g", {}, stage);
+var viewFront = el("g", {}, stage);
+var specEl = document.getElementById("specLbl");
+
+/* ---- The firing truth, shared by both views: the Mopar V8 order
+   1-8-4-3-6-5-7-2, one firing per 550 ms step of absolute time.
+   Cylinder numbering: left bank (driver side, drawn left) carries
+   1-3-5-7 front-to-back (drawn far-to-near on the end view,
+   top-to-bottom on the front), right bank 2-4-6-8. ------------- */
+var FIRING = [1, 8, 4, 3, 6, 5, 7, 2];
+function firingCyl(nowMs){ return FIRING[Math.floor(nowMs/550) % 8]; }
+var pulsesByCyl = {}, tipAbs = {};          /* front view, by cylinder */
+var endPulsesByCyl = {}, endHeads = {};     /* end view, by cylinder */
+
+/* =====================================================================
+   END VIEW — the crankshaft end. Crank centre low; banks rising at
+   the true 90° V; crank pulley the rotational hero; the TIMING
+   GEAR PAIR meshing in the valley; alternator + belt at the side.
+   ===================================================================== */
+var ENDC = { x:200, y:246 };               /* crank centre, end view */
+var CAMC = { x:200, y:156 };               /* cam centre: 90 above crank
+                                              = 30 (crank pitch) + 60 (cam pitch) */
+var endMotor = el("g", {}, viewEnd);
+(function buildEnd(){
+  /* intake / carb silhouette across the valley top */
+  el("rect", {x:172, y:78, width:56, height:17, rx:7, fill:"none",
+    stroke:PAL.brass, "stroke-width":2.2}, endMotor);
+  el("line", {x1:200, y1:95, x2:200, y2:150, stroke:PAL.brassLo, "stroke-width":2.2}, endMotor);
+  /* valve covers in bank-tilted frames at the true ±45° */
+  [-1, 1].forEach(function(sign){
+    var g = el("g", {transform:"rotate("+(sign*45)+" "+ENDC.x+" "+ENDC.y+")"}, endMotor);
+    el("rect", {x:ENDC.x-14, y:ENDC.y-186, width:28, height:106, rx:10,
+      fill:"none", stroke:PAL.bay, "stroke-width":3}, g);
+  });
+  /* four heads per bank along the V arms; far end of the arm is
+     cylinder 1 (left) / 2 (right), stepping odd/even to the crank */
+  [-1, 1].forEach(function(sign){
+    for(var k=0; k<4; k++){
+      var dist = 178 - k*27;
+      var hx = ENDC.x + sign*0.7071068*dist, hy = ENDC.y - 0.7071068*dist;
+      var cyl = sign < 0 ? (1 + k*2) : (2 + k*2);
+      el("circle", {cx:hx, cy:hy, r:12.5, fill:PAL.void, stroke:PAL.steelHi, "stroke-width":2}, endMotor);
+      el("circle", {cx:hx, cy:hy, r:5.5, fill:"none", stroke:PAL.steelLo, "stroke-width":1.4}, endMotor);
+      var pu = el("circle", {cx:hx, cy:hy, r:16.5, fill:"none",
+        stroke:PAL.bay, "stroke-width":2.4, opacity:"0.15"}, endMotor);
+      endPulsesByCyl[cyl] = pu; endHeads[cyl] = {x:hx, y:hy};
+    }
+  });
+})();
+/* crank pulley — the rotational hero: rim, groove, spokes, bolts */
+var crankPulleyEnd = el("g", {}, endMotor);
+(function(){
+  el("circle", {cx:ENDC.x, cy:ENDC.y, r:56, fill:PAL.void, stroke:PAL.alloy, "stroke-width":3}, crankPulleyEnd);
+  el("circle", {cx:ENDC.x, cy:ENDC.y, r:48, fill:"none", stroke:PAL.steelLo, "stroke-width":1.6}, crankPulleyEnd);
+  for(var s=0; s<6; s++){
+    var sp = polar(ENDC.x, ENDC.y, 44, s*60);
+    el("line", {x1:ENDC.x, y1:ENDC.y, x2:sp[0].toFixed(1), y2:sp[1].toFixed(1),
+      stroke:PAL.alloyLo, "stroke-width":2.4}, crankPulleyEnd);
+    var bp = polar(ENDC.x, ENDC.y, 38, s*60+30);
+    el("circle", {cx:bp[0], cy:bp[1], r:3.4, fill:PAL.alloy, stroke:"none"}, crankPulleyEnd);
+  }
+})();
+/* alternator pulley + belt, at the side, geared 30:14 to the crank */
+var ALTC = { x:304, y:184 };
+var beltEndA = el("line", {x1:246, y1:206, x2:286, y2:192, stroke:PAL.steelLo,
+  "stroke-width":3, "stroke-dasharray":"7 5"}, endMotor);
+var beltEndB = el("line", {x1:240, y1:280, x2:282, y2:206, stroke:PAL.steelLo,
+  "stroke-width":3, "stroke-dasharray":"7 5"}, endMotor);
+var altPulleyEnd = el("g", {}, endMotor);
+(function(){
+  el("circle", {cx:ALTC.x, cy:ALTC.y, r:25, fill:PAL.void, stroke:PAL.steel, "stroke-width":2.6}, altPulleyEnd);
+  for(var s=0; s<5; s++){
+    var sp = polar(ALTC.x, ALTC.y, 21, s*72);
+    el("line", {x1:ALTC.x, y1:ALTC.y, x2:sp[0].toFixed(1), y2:sp[1].toFixed(1),
+      stroke:PAL.steel, "stroke-width":2}, altPulleyEnd);
+  }
+  el("circle", {cx:ALTC.x, cy:ALTC.y, r:3.2, fill:PAL.steel, stroke:"none"}, altPulleyEnd);
+})();
+/* THE TIMING GEARS — popped out present over the pulley face and
+   in the valley: crank gear 20T on the crank axis (brass), cam
+   gear 40T above it (brass, counter-rotating at half speed), and
+   the distributor drive gear riding the cam shaft at cam speed. */
+var crankGear = makeGear(endMotor, ENDC.x, ENDC.y, 20, 30, PAL.brass, 2.2);
+var camGear = makeGear(endMotor, CAMC.x, CAMC.y, 40, 60, PAL.brass, 2.2);
+var distGear = makeGear(endMotor, CAMC.x, CAMC.y, 12, 13, PAL.brassHi, 1.5);
+var gearLbl = el("text", {x:200, y:316, "text-anchor":"middle", fill:PAL.brassLo,
+  "font-size":8.5, "letter-spacing":"0.12em",
+  "font-family":"ui-monospace,Menlo,Consolas,monospace"}, endMotor);
+gearLbl.textContent = "CAM 40T — CRANK 20T · 2:1";
+/* the spark dot for the end view — the firing head wears it there */
+var endDot = el("circle", {cx:ENDC.x, cy:ENDC.y, r:5, fill:PAL.spark, stroke:"none"}, endMotor);
+
+/* =====================================================================
+   FRONT VIEW — the founding motor's working face, kept and truthed:
+   the pulse walk is now the true firing order, the spark runs from
+   the distributor down the plug lead, and the belt MOVES.
+   ===================================================================== */
+var motor = el("g", {}, viewFront);
+/* block */
+el("rect", {x:118, y:150, width:164, height:118, rx:8, fill:"none",
+  stroke:PAL.alloyLo, "stroke-width":2.6}, motor);
+/* valve-cover banks, angled ±24°, four bolts + four plug leads each;
+   tips are recorded BY CYLINDER NUMBER, not by draw order. */
+function vbank(sign){
+  var g = el("g", {transform:"rotate("+(sign*24)+" "+CX+" 196)"}, motor);
+  el("rect", {x:CX+sign*74-15, y:118, width:30, height:150, rx:9, fill:"none",
+    stroke:PAL.bay, "stroke-width":3}, g);
+  for(var i=0; i<4; i++){
+    var by = 138 + i*38;
+    var cyl = sign < 0 ? (1 + i*2) : (2 + i*2);
+    el("circle", {cx:CX+sign*74, cy:by, r:2.8, fill:PAL.alloy, stroke:"none"}, g);
+    var tip = el("circle", {cx:CX+sign*96, cy:by+8, r:4.6, fill:"none",
+      stroke:PAL.bay, "stroke-width":2, opacity:"0.15"}, g);
+    pulsesByCyl[cyl] = tip;
+    var abs = rotPt(CX+sign*96, by+8, CX, 196, sign*24);
+    tipAbs[cyl] = { x:abs[0], y:abs[1] };
+    el("path", {d:"M "+(CX+sign*60)+" "+by+" Q "+(CX+sign*38)+" "+(by-12)+" "+CX+" 176",
+      fill:"none", stroke:PAL.steelLo, "stroke-width":1.3}, g);
+  }
+  return g;
+}
+vbank(-1); vbank(1);
+/* distributor on the spine */
+el("circle", {cx:CX, cy:176, r:8, fill:PAL.void, stroke:PAL.brass, "stroke-width":2.2}, motor);
+el("circle", {cx:CX, cy:176, r:2.6, fill:PAL.brassHi, stroke:"none"}, motor);
+/* THE SPARK LINE: distributor to the cylinder actually firing,
+   re-aimed every painted frame from the true order. */
+var sparkLine = el("line", {x1:CX, y1:176, x2:CX, y2:176, stroke:PAL.spark,
+  "stroke-width":2.6, "stroke-linecap":"round", opacity:"0.95"}, motor);
+var sparkDot = el("circle", {cx:CX, cy:176, r:4.6, fill:PAL.spark, stroke:"none"}, motor);
+/* air cleaner: the big round hat (a still part — it does not turn) */
+el("circle", {cx:CX, cy:118, r:40, fill:PAL.void, stroke:PAL.alloy, "stroke-width":3}, motor);
+el("circle", {cx:CX, cy:118, r:31, fill:"none", stroke:PAL.alloyLo, "stroke-width":1.5}, motor);
+el("circle", {cx:CX, cy:118, r:6, fill:"none", stroke:PAL.brass, "stroke-width":2.2}, motor);
+el("line", {x1:CX-11, y1:118, x2:CX+11, y2:118, stroke:PAL.brass, "stroke-width":2.6}, motor);
+/* belt runs: dashed, advancing at belt speed in paintFront */
+var beltA = el("line", {x1:172, y1:296, x2:280, y2:262, stroke:PAL.steelLo,
+  "stroke-width":3, "stroke-dasharray":"7 5"}, motor);
+var beltB = el("line", {x1:214, y1:322, x2:290, y2:282, stroke:PAL.steelLo,
+  "stroke-width":3, "stroke-dasharray":"7 5"}, motor);
+/* pulleys: spoked groups, geared 30:14 by diameter */
+function pulley(cx, cy, r, spokes, colour){
+  var g = el("g", {}, motor);
+  el("circle", {cx:cx, cy:cy, r:r, fill:PAL.void, stroke:colour, "stroke-width":2.6}, g);
+  for(var sIdx=0; sIdx<spokes; sIdx++){
+    var p = polar(cx, cy, r-3, sIdx*(360/spokes));
+    el("line", {x1:cx, y1:cy, x2:p[0].toFixed(1), y2:p[1].toFixed(1),
+      stroke:colour, "stroke-width":2}, g);
+  }
+  el("circle", {cx:cx, cy:cy, r:3.4, fill:colour, stroke:"none"}, g);
+  return g;
+}
+var crankPulley = pulley(196, 302, 30, 6, PAL.steelHi);
+var altPulley = pulley(288, 268, 14, 5, PAL.steel);
+/* glass cover over the motor: outline, fasteners, sheen */
+el("rect", {x:82, y:60, width:236, height:284, rx:24, fill:"none",
+  stroke:PAL.steelHi, "stroke-width":2.2}, viewFront);
+el("rect", {x:90, y:68, width:220, height:268, rx:19, fill:"none",
+  stroke:PAL.steelLo, "stroke-width":1.1}, viewFront);
+[[96,74],[304,74],[96,330],[304,330]].forEach(function(pt){
+  el("circle", {cx:pt[0], cy:pt[1], r:5.5, fill:"none", stroke:PAL.brass, "stroke-width":2}, viewFront);
+  el("circle", {cx:pt[0], cy:pt[1], r:1.8, fill:PAL.brassHi, stroke:"none"}, viewFront);
+});
+el("path", {d:"M 108 306 L 208 84", fill:"none", stroke:PAL.steelHi, "stroke-width":2.4}, viewFront);
+el("path", {d:"M 132 316 L 224 102", fill:"none", stroke:PAL.steelLo, "stroke-width":1.3}, viewFront);
+
+/* ---- Paint: every value a pure function of absolute time ----------
+   Crank display rate: one revolution per 1.6 s (the face's standing
+   idle read). The alternator turns 30/14× the crank (open belt —
+   same direction). The cam turns at exactly −crank/2: meshing
+   external gears counter-rotate, and 20T into 40T halves the speed.
+   Belt dash travel is crank angle × crank radius — the belt moves
+   at the speed the pulley surface moves. */
+function crankDeg(nowMs){ return ((nowMs/1600) % 1) * 360; }
+function beltOff(nowMs){ return -((crankDeg(nowMs) * 0.5236) % 12); }
+function paintFiring(nowMs){
+  var cyl = firingCyl(nowMs), c;
+  for(c=1; c<=8; c++){
+    pulsesByCyl[c].setAttribute("opacity", c===cyl ? "1" : "0.15");
+    endPulsesByCyl[c].setAttribute("opacity", c===cyl ? "1" : "0.15");
+  }
+  var t = tipAbs[cyl];
+  sparkLine.setAttribute("x2", t.x.toFixed(1)); sparkLine.setAttribute("y2", t.y.toFixed(1));
+  sparkDot.setAttribute("cx", t.x.toFixed(1)); sparkDot.setAttribute("cy", t.y.toFixed(1));
+  var e = endHeads[cyl];
+  endDot.setAttribute("cx", e.x.toFixed(1)); endDot.setAttribute("cy", e.y.toFixed(1));
+}
+function paintFront(nowMs){
+  var a = crankDeg(nowMs);
+  crankPulley.setAttribute("transform", "rotate("+a.toFixed(2)+" 196 302)");
+  altPulley.setAttribute("transform", "rotate("+(a*30/14).toFixed(2)+" 288 268)");
+  var bo = beltOff(nowMs).toFixed(1);
+  beltA.setAttribute("stroke-dashoffset", bo);
+  beltB.setAttribute("stroke-dashoffset", bo);
+  var tx = Math.sin(nowMs/51)*0.6, ty = Math.cos(nowMs/44)*0.45;
+  motor.setAttribute("transform", "translate("+tx.toFixed(2)+" "+ty.toFixed(2)+")");
+  paintFiring(nowMs);
+}
+function paintEnd(nowMs){
+  var a = crankDeg(nowMs);
+  crankPulleyEnd.setAttribute("transform", "rotate("+a.toFixed(2)+" "+ENDC.x+" "+ENDC.y+")");
+  altPulleyEnd.setAttribute("transform", "rotate("+(a*30/14).toFixed(2)+" "+ALTC.x+" "+ALTC.y+")");
+  var bo = beltOff(nowMs).toFixed(1);
+  beltEndA.setAttribute("stroke-dashoffset", bo);
+  beltEndB.setAttribute("stroke-dashoffset", bo);
+  /* the timing assignment, turning: crank gear WITH the crank,
+     cam gear AGAINST it at half speed (mesh phase a drawn constant),
+     distributor drive gear riding the cam shaft at cam speed. */
+  crankGear.setAttribute("transform", "rotate("+a.toFixed(2)+" "+ENDC.x+" "+ENDC.y+")");
+  var camA = -a/2 + 4.5;
+  camGear.setAttribute("transform", "rotate("+camA.toFixed(2)+" "+CAMC.x+" "+CAMC.y+")");
+  distGear.setAttribute("transform", "rotate("+camA.toFixed(2)+" "+CAMC.x+" "+CAMC.y+")");
+  var tx = Math.sin(nowMs/51)*0.6, ty = Math.cos(nowMs/44)*0.45;
+  endMotor.setAttribute("transform", "translate("+tx.toFixed(2)+" "+ty.toFixed(2)+")");
+  paintFiring(nowMs);
+}
+
+/* ---- The tip between views (as on the V12 reference: the end view
+   flattens away around the crank axis, the front settles in). ------ */
+var view = { mix:0, from:0, to:0, animStart:-1, animDur:2400 };
+function viewDest(){ return view.animStart >= 0 ? view.to : view.mix; }
+function applyMix(m){
+  view.mix = m;
+  var endP = easeIO(clamp01(m*2));
+  var topP = easeIO(clamp01((m-0.45)/0.55));
+  var endSy = 1 - 0.8*endP, topSy = 0.2 + 0.8*topP;
+  viewEnd.setAttribute("transform",
+    "translate("+CX+" "+ENDC.y+") scale(1 "+endSy.toFixed(3)+") translate("+(-CX)+" "+(-ENDC.y)+")");
+  viewEnd.setAttribute("opacity", String(1 - clamp01((m-0.1)/0.45)));
+  viewFront.setAttribute("transform",
+    "translate("+CX+" "+CY+") scale(1 "+topSy.toFixed(3)+") translate("+(-CX)+" "+(-CY)+")");
+  viewFront.setAttribute("opacity", String(clamp01((m-0.3)/0.5)));
+  specEl.textContent = m < 0.5 ? "CRANKSHAFT END · TIMING GEARS 2:1" : "GLASS-COVER EIGHT · AT IDLE";
+}
+function turnTo(to, dur){
+  view.from = view.mix; view.to = to;
+  view.animDur = dur || 2200; view.animStart = Date.now();
+}
+
+/* ---- Time read (digital fitting, as on every sibling face) --------- */
+var clockEl = document.getElementById("clock"), dateEl = document.getElementById("dateLine");
+var DAYS = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+var MONS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+var lastMinute = -1;
+function paintTime(now){
+  var m = now.getMinutes();
+  if(m === lastMinute) return;
+  lastMinute = m;
+  var hh = now.getHours(), h12 = hh % 12; if(h12 === 0) h12 = 12;
+  clockEl.textContent = (h12<10?"0":"")+h12+":"+(m<10?"0":"")+m;
+  dateEl.textContent = DAYS[now.getDay()]+" · "+MONS[now.getMonth()]+" "+now.getDate()+
+    " · "+(hh<12?"AM":"PM");
+}
+
+/* =====================================================================
+   RUN-WINDOW GOVERNOR (the Nov 13 behaviour law, ported from the
+   V12 reference): AUTO-START on show; run bound to the host
+   window's timeout — host global, then address, then the 30 s
+   fallback, resolved value + source reported on window.__governor;
+   hidden faces sleep at once; TOUCH TURNS THE VIEW ONLY.
+   ===================================================================== */
+function resolveTimeoutMs(){
+  if(typeof window.__faceTimeoutMs === "number" && window.__faceTimeoutMs > 0)
+    return { ms:Math.floor(window.__faceTimeoutMs), source:"host-global-ms" };
+  if(typeof window.__faceTimeoutSec === "number" && window.__faceTimeoutSec > 0)
+    return { ms:Math.floor(window.__faceTimeoutSec*1000), source:"host-global-sec" };
+  var q = location.search || "", mt = /[?&]timeoutMs=(\d+)/.exec(q), ts = /[?&]timeout=(\d+)/.exec(q);
+  if(mt) return { ms:parseInt(mt[1], 10), source:"address-timeoutMs" };
+  if(ts) return { ms:parseInt(ts[1], 10)*1000, source:"address-timeout" };
+  return { ms:30000, source:"fallback-30s" };
+}
+var RESOLVED = resolveTimeoutMs();
+var TIMEOUT_MS = RESOLVED.ms;
+var lampEl = document.getElementById("stateLamp");
+var eng = { mode:"rest", runStart:0, enters:0, rests:0, lastSignal:"boot" };
+var gov = { state:"rest", enters:0, rests:0, lastSignal:"boot",
+            timeoutMs:TIMEOUT_MS, timeoutSource:RESOLVED.source };
+window.__governor = gov;
+window.__faceRest = true;
+function syncGov(){
+  gov.state = eng.mode; gov.enters = eng.enters; gov.rests = eng.rests;
+  gov.lastSignal = eng.lastSignal;
+  window.__faceRest = (eng.mode !== "live");
+}
+var rafId = 0;
+function paintStill(){
+  paintFront(Date.now());
+  paintEnd(Date.now());
+}
+function startRun(sig){
+  eng.mode = "live"; eng.enters++; eng.lastSignal = sig;
+  eng.runStart = Date.now();
+  lampEl.textContent = "LIVE";
+  document.body.classList.add("live");
+  /* every run opens on the crankshaft end and tips to the front */
+  view.animStart = -1; applyMix(0);
+  turnTo(1, 2400);
+  syncGov();
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(frame);
+}
+function sleep(sig){
+  eng.lastSignal = sig;
+  if(eng.mode !== "rest"){ eng.mode = "rest"; eng.rests++; }
+  lampEl.textContent = "AT REST";
+  document.body.classList.remove("live");
+  cancelAnimationFrame(rafId); rafId = 0;
+  if(view.animStart >= 0){ view.mix = view.to; view.animStart = -1; applyMix(view.mix); }
+  paintStill();
+  syncGov();
+}
+function frame(){
+  if(eng.mode !== "live") return;
+  var now = Date.now();
+  if(now - eng.runStart >= TIMEOUT_MS){ sleep("window-timeout"); return; }
+  if(view.animStart >= 0){
+    var p = (now - view.animStart) / view.animDur;
+    if(p >= 1){ view.mix = view.to; view.animStart = -1; applyMix(view.mix); }
+    else applyMix(view.from + (view.to - view.from) * easeIO(p));
+  }
+  paintFront(now);
+  paintEnd(now);
+  rafId = requestAnimationFrame(frame);
+}
+/* Touch = play: turn the view. Never ignition, never a window reset. */
+function cycleView(){
+  var to = viewDest() === 1 ? 0 : 1;
+  if(eng.mode === "live"){ turnTo(to, 1800); eng.lastSignal = "touch-view"; }
+  else {
+    view.animStart = -1; applyMix(to);
+    paintStill(); eng.lastSignal = "touch-view-rest";
+  }
+  syncGov();
+}
+document.getElementById("face").addEventListener("pointerdown", function(){ cycleView(); });
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) sleep("hidden");
+  else { paintTime(new Date()); startRun("visible"); }
+});
+window.ApexFace = {
+  observe: function(){ startRun("container-observe"); },
+  rest:    function(){ sleep("container-rest"); },
+  toggle:  function(){ cycleView(); },
+  state:   function(){ return eng.mode; }
+};
+window.addEventListener("apex-face-observe", function(){ startRun("event-observe"); });
+window.addEventListener("apex-face-rest", function(){ sleep("event-rest"); });
+/* Bench handles, in the face-line style: they report, they do not lie. */
+window.__cuda = {
+  state: function(){ return eng.mode; },
+  view: function(){ return view.animStart >= 0 ? "turning" :
+    (view.mix === 1 ? "front" : (view.mix === 0 ? "end" : "mid")); },
+  timeoutMs: function(){ return TIMEOUT_MS; },
+  timeoutSource: function(){ return RESOLVED.source; },
+  firing: function(){ return firingCyl(Date.now()); },
+  crankDeg: function(){ return Math.round(crankDeg(Date.now())); },
+  cycleView: cycleView,
+  start: function(){ startRun("bench"); },
+  sleep: function(){ sleep("bench"); }
+};
+
+/* ---- Boot: paint the fittings, pose the still, then IGNITE on
+   show — no touch, no signal, the run opens by itself. ------------ */
+paintTime(new Date());
+applyMix(0);
+paintStill();
+startRun("boot");
+setInterval(function(){
+  var now = new Date();
+  paintTime(now);
+}, 1000);
+
+</script>
+<script>
+/* =====================================================================
+   FACE LAW 2 - THE BEZEL IS WIRED (face-line sweep, Nov 10, 2026)
+   ---------------------------------------------------------------------
+   This bezel's cardinals were paint: N sat at the top because it was
+   drawn there. Under Face Law 2 (as amended, Nov 10, 2026) a compass
+   bezel must always show a LIVE heading state with an honest
+   confidence colour in the face's own palette - or honestly show
+   that it has nothing. The stack, in order:
+     (a) deviceorientation / deviceorientationabsolute - the
+         magnetometer answer, when the hardware answers;
+     (b) GPS course-over-ground while moving, fused with the
+         inertial carry;
+     (c) inertial carry from the last good anchor;
+     (d) no anchor: SEARCHING - the witness sweeps slowly and
+         asserts NO north. A fabricated heading is a firing offence
+         under the fabrication ban; this stack would rather sweep.
+   An accelerometer alone never originates north (deviceorientation
+   is only read when it carries an absolute/compass heading).
+   Confidence, in this face's called colours: brassHi (green-class)
+   = live anchor agreeing with the inertial read; #ffb52e
+   (yellow-class) = real but weak/intermittent anchor, or a recent
+   inertial carry; #ff3d00 (red-class) = stale, disagreeing, or no
+   anchor - searching. The stack is FIREWALLED: it lives in its own
+   script and touches only its own three elements (witness, ring,
+   the N glyph). Its failure changes nothing else on the face, and
+   nothing else on the face can stop it. Bench: window.__heading.
+   ===================================================================== */
+(function(){
+  "use strict";
+  var T = window.__hdgTargets;
+  if(!T || !T.needle || !T.ring || !T.north) return;   /* bezel absent: nothing to govern */
+  var hdg = { state:"searching", heading:null, source:"none",
+              confidence:"red", lastAnchorMs:0, disagreements:0 };
+  window.__heading = hdg;
+  var CXp = T.cx, CYp = T.cy;
+  function paint(now){
+    var col = hdg.confidence === "green" ? T.green :
+              hdg.confidence === "yellow" ? T.yellow : T.red;
+    T.ring.setAttribute("stroke", col);
+    T.north.setAttribute("fill", col);
+    T.needle.setAttribute("stroke", col);
+    var ang;
+    if(hdg.state === "live" && typeof hdg.heading === "number"){
+      ang = hdg.heading;
+    } else if(hdg.state === "carry" && typeof hdg.heading === "number"){
+      ang = hdg.heading;
+    } else {
+      hdg.state = "searching"; hdg.heading = null;
+      ang = ((now/1000) * 6) % 360;          /* one slow sweep per minute */
+    }
+    T.needle.setAttribute("transform", "rotate(" + ang.toFixed(2) + " " + CXp + " " + CYp + ")");
+  }
+  function anchor(deg, src, now){
+    if(typeof deg !== "number" || !isFinite(deg)) return;
+    deg = ((deg % 360) + 360) % 360;
+    if(typeof hdg.heading === "number" && hdg.state === "live"){
+      var d = Math.abs(deg - hdg.heading); if(d > 180) d = 360 - d;
+      if(d > 25){ hdg.disagreements++; } else { hdg.disagreements = 0; }
+    }
+    hdg.heading = deg; hdg.source = src; hdg.lastAnchorMs = now;
+    hdg.state = "live";
+    hdg.confidence = hdg.disagreements >= 3 ? "yellow" : "green";
+  }
+  function onOrient(e){
+    var deg = null;
+    if(typeof e.webkitCompassHeading === "number") deg = e.webkitCompassHeading;
+    else if(e.absolute && typeof e.alpha === "number") deg = 360 - e.alpha;
+    if(deg !== null) anchor(deg, "magnetometer", Date.now());
+  }
+  if(window.DeviceOrientationEvent){
+    window.addEventListener("deviceorientationabsolute", onOrient, true);
+    window.addEventListener("deviceorientation", onOrient, true);
+    if(typeof DeviceOrientationEvent.requestPermission === "function"){
+      /* iOS gate: permission is asked on the first press of the glass,
+         inside this stack only; a refusal leaves the stack searching. */
+      window.addEventListener("pointerdown", function ask(){
+        window.removeEventListener("pointerdown", ask, true);
+        try { DeviceOrientationEvent.requestPermission().catch(function(){}); } catch(e){}
+      }, true);
+    }
+  }
+  var lastFix = null;
+  function onGeo(pos){
+    var c = pos.coords, now = Date.now();
+    if(lastFix && typeof c.speed === "number" && c.speed >= 0.5){
+      var dt = (now - lastFix.t)/1000;
+      if(dt > 0){
+        var dy = (c.latitude - lastFix.lat) * 111320;
+        var dx = (c.longitude - lastFix.lon) * 111320 * Math.cos(c.latitude * Math.PI/180);
+        if(Math.sqrt(dx*dx + dy*dy) >= 2){
+          anchor((Math.atan2(dx, dy) * 180/Math.PI + 360) % 360, "gps-course", now);
+        }
+      }
+    }
+    lastFix = { lat:c.latitude, lon:c.longitude, t:now };
+  }
+  if(navigator.geolocation && navigator.geolocation.watchPosition){
+    try { navigator.geolocation.watchPosition(onGeo, function(){}, { enableHighAccuracy:true, maximumAge:2000 }); } catch(e){}
+  }
+  function tick(){
+    var now = Date.now();
+    if(hdg.state === "live" && now - hdg.lastAnchorMs > 5000){
+      hdg.state = "carry"; hdg.confidence = "yellow";   /* inertial carry: last anchored heading, honestly ageing */
+    }
+    if(hdg.state === "carry" && now - hdg.lastAnchorMs > 30000){
+      hdg.state = "searching"; hdg.confidence = "red"; hdg.heading = null; hdg.source = "none";
+    }
+    paint(now);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+<script>
+  /* ---- WEATHER FITTING: the sibling faces' pattern, lifted from
+     apex-weather — one small Open-Meteo JSON fetch on load for the
+     house coordinates (Johannesburg, MI), refresh every 15 minutes,
+     painted as one plain-text line in the read panel. A failed fetch
+     keeps the last paint; the line never blocks the face. --------- */
+  var WX_URL = 'https://api.open-meteo.com/v1/forecast?latitude=44.98096&longitude=-84.49608'
+    + '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m'
+    + '&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FDetroit&forecast_days=1';
+  var WX_CODES = {0:'CLEAR',1:'MOSTLY CLEAR',2:'PARTLY CLOUDY',3:'OVERCAST',45:'FOG',48:'FOG',
+    51:'DRIZZLE',53:'DRIZZLE',55:'DRIZZLE',56:'FREEZING DRIZZLE',57:'FREEZING DRIZZLE',
+    61:'RAIN',63:'RAIN',65:'HEAVY RAIN',66:'FREEZING RAIN',67:'FREEZING RAIN',
+    71:'SNOW',73:'SNOW',75:'HEAVY SNOW',77:'SNOW GRAINS',80:'SHOWERS',81:'SHOWERS',82:'VIOLENT SHOWERS',
+    85:'SNOW SHOWERS',86:'SNOW SHOWERS',95:'THUNDERSTORM',96:'T-STORM + HAIL',99:'T-STORM + HAIL'};
+  var WX_DIRS = ['N','NE','E','SE','S','SW','W','NW'];
+  function paintWx() {
+    var x = new XMLHttpRequest();
+    x.open('GET', WX_URL, true);
+    x.onreadystatechange = function() {
+      if (x.readyState !== 4 || x.status !== 200) return;
+      try {
+        var j = JSON.parse(x.responseText), c = j.current;
+        var dir = WX_DIRS[Math.round(c.wind_direction_10m / 45) % 8];
+        document.getElementById('wxLine').textContent =
+          Math.round(c.temperature_2m) + '° ' + (WX_CODES[c.weather_code] || '—')
+          + ' · WIND ' + dir + ' ' + Math.round(c.wind_speed_10m)
+          + ' · FEELS ' + Math.round(c.apparent_temperature) + '°';
+      } catch (e) { /* keep last paint */ }
+    };
+    x.send();
+  }
+  paintWx();
+  setInterval(paintWx, 900000);
+</script>
+
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+</body>
+</html>

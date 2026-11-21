@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Glass House Flagship Dark \u00b7 Apex Universal",
+ "short_name": "Glass House Flagship Dar",
+ "description": "The dark-humor edition, in the owner's words: the fish are not hemmed to the circle \u2014 they free-float, and when one meets a turning wheel the machine eats: caught, dissolved into little red lines, gone. Then a smaller fish appears and grows \u2014 until it gets caught. No counters, no score.",
+ "start_url": "glass-house-flagship-dark.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

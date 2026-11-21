@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Hot Rod Blown Drag \u00b7 Apex Universal",
+ "short_name": "Hot Rod Blown Drag",
+ "description": "Hot Rod Line (Nov 20, 2026): an original eye-stalk Apex monster, shifter in hand, on a bare blown drag motor \u2014 era graphic style, a house-original monster \u2014 with a compass dial and the time in analog and digital.",
+ "start_url": "hotrod-blown.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

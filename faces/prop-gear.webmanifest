@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Propeller & Gears \u00b7 Apex Universal",
+ "short_name": "Propeller & Gears",
+ "description": "The Propeller Wing (Nov 20, 2026): a propeller on a 36T great gear, clock gears behind it meshing at true ratios 36:20:12, the 12T gear carrying real clock hands \u2014 propellers turning like clock gears, with clock gears behind them.",
+ "start_url": "prop-gear.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

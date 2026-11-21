@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Glass House Flagship Dark Suite \u00b7 Apex Universal",
+ "short_name": "Glass House Flagship Dar",
+ "description": "Suite Edition of the Glass House Flagship Machinery Dark (Nov 11, 2026) - the Product Inventory Review routine's FITTINGS FIRST CONTAINER (owner order, Nov 11, 23:20 EST; push-through ordered 23:33 EST): the plain Dark build beside it, byte-untouched, plus the two standard fittings. WEATHER: the bas",
+ "start_url": "glass-house-flagship-dark-suite.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

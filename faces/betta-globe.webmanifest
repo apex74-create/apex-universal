@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Betta Ultra Deluxe Globe \u00b7 Apex Universal",
+ "short_name": "Betta Ultra Deluxe Globe",
+ "description": "Betta Ultra Deluxe V3.1 \u2014 GLOBE PLATE BACKDROP variant (Nov 10, 2026; Package Scope Inspector BO-3 plate swap). Only the <g id=\"tankBackdrop\"> contents differ from the base face: Hierographic Plate 1 (the Globe, 1920x1088) seated in the apex-backdrop-slot as an embedded raster \u2014 cover-cropped to the",
+ "start_url": "betta-globe.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
