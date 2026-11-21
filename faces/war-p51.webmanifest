@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 War P51 Cowling \u00b7 Apex Universal",
+ "short_name": "War P51 Cowling",
+ "description": "The Propeller Wing (Nov 20, 2026): the P-51 seat \u2014 tall narrow V-12 cowling, cheek exhaust stubs, tapered wings, 4-blade prop, pointed cone spinner (a different nose cone from the Corsair seat), chin intake scoop, random ingest at the viewer, and a photorealistic photo view (touch-flip) generated fr",
+ "start_url": "war-p51.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

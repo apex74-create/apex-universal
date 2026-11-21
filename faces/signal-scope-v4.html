@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>APEX — Signal Watch · SIGNAL SCOPE V4 · FOX HUNT EDITION</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#010502; }
+  body { font-family:ui-monospace,Menlo,Consolas,monospace; overflow:hidden; }
+  #stage { position:absolute; left:0; top:0; overflow:hidden; background:radial-gradient(circle at center, #03140a 0%, #020403 70%, #010502 100%); }
+  #fall { position:absolute; left:0; top:0; overflow:hidden; pointer-events:none; }
+  .col { position:absolute; top:0; white-space:pre; font-weight:400; }
+  #foxbg { position:absolute; display:block; pointer-events:none; }
+  #scope { position:absolute; display:block; }
+  #pulse { position:absolute; display:block; }
+  #freq { position:absolute; display:block; }
+  .vignette { position:absolute; left:0; top:0; background:radial-gradient(ellipse at center, rgba(0,0,0,.05) 45%, rgba(0,0,0,.75) 100%); pointer-events:none; }
+  #brand { position:absolute; text-align:center; color:#39ff6a; font-weight:700; letter-spacing:.35em; text-shadow:0 0 12px rgba(57,255,106,.55); }
+  #batt { position:absolute; text-align:right; color:#b6ffd0; font-weight:700; font-variant-numeric:tabular-nums; text-shadow:0 0 8px rgba(57,255,106,.5); }
+  #clock { position:absolute; text-align:center; color:#eaffef; font-weight:800; line-height:1; text-shadow:0 0 10px rgba(57,255,106,.9), 0 0 42px rgba(57,255,106,.45); font-variant-numeric:tabular-nums; }
+  #date { position:absolute; text-align:center; color:#8fd9a4; font-variant-numeric:tabular-nums; }
+  #wx { position:absolute; text-align:center; color:#8fd9a4; font-variant-numeric:tabular-nums; text-shadow:0 0 6px rgba(57,255,106,.3); }
+  #bios { position:absolute; color:#8fd9a4; font-variant-numeric:tabular-nums; text-shadow:0 0 6px rgba(57,255,106,.35); }
+  #bios .bl { color:#3f6b4d; letter-spacing:.12em; }
+  #bios .bv { color:#b6ffd0; font-weight:700; }
+  #bios .bheart { color:#39ff6a; }
+  #bios .bstale { color:#ffc95c; }
+  #mode { position:absolute; text-align:center; color:#ffc95c; font-weight:700; letter-spacing:.18em; text-shadow:0 0 8px rgba(255,201,92,.35); }
+  #invbtn { position:absolute; text-align:center; color:#39ff6a; font-weight:700; letter-spacing:.22em;
+    border:1px solid rgba(57,255,106,.55); border-radius:6px; background:rgba(2,20,10,.72);
+    text-shadow:0 0 8px rgba(57,255,106,.5); cursor:pointer; user-select:none; -webkit-user-select:none; }
+  #invbtn.on { color:#0b2e16; background:#39ff6a; text-shadow:none; box-shadow:0 0 18px rgba(57,255,106,.55); }
+  #cenbtn { position:absolute; text-align:center; color:#39ff6a; font-weight:700; letter-spacing:.22em;
+    border:1px solid rgba(57,255,106,.55); border-radius:6px; background:rgba(2,20,10,.72);
+    text-shadow:0 0 8px rgba(57,255,106,.5); cursor:pointer; user-select:none; -webkit-user-select:none; }
+  #cenbtn.on { color:#0b2e16; background:#39ff6a; text-shadow:none; box-shadow:0 0 18px rgba(57,255,106,.55); }
+  /* EMITTER CENSUS panel — DOM text over the glass, face palette. */
+  #census { position:absolute; display:none; overflow-y:auto; overflow-x:hidden; z-index:5;
+    background:#021009; border:1px solid rgba(57,255,106,.45); border-radius:8px;
+    padding:8px 10px; color:#b6ffd0; -webkit-overflow-scrolling:touch; }
+  #census .cen-h { color:#39ff6a; font-weight:700; letter-spacing:.22em; text-align:center; }
+  #census .cen-sub { color:#8fd9a4; text-align:center; margin-top:2px; }
+  #census .cen-sim { color:#ffc95c; font-weight:700; }
+  #census .cen-tot { text-align:center; margin-top:6px; color:#eaffef; font-weight:700; line-height:1.5; }
+  #census .cen-tot .dim { color:#8fd9a4; font-weight:400; }
+  #census .cen-rule { text-align:center; color:#ffc95c; margin-top:4px; letter-spacing:.06em; }
+  #census .cen-sec { color:#3f6b4d; letter-spacing:.12em; margin-top:9px; border-top:1px solid rgba(57,255,106,.25); padding-top:5px; }
+  #census .cen-row { display:flex; justify-content:space-between; gap:6px; margin-top:2px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  #census .cen-nm { color:#b6ffd0; overflow:hidden; text-overflow:ellipsis; }
+  #census .cen-tag { color:#3f6b4d; }
+  #census .cen-why { color:#ffc95c; }
+  #census .cen-pipe { color:#eaffef; font-weight:700; }
+  #census .cen-rs { color:#eaffef; font-weight:700; }
+  #census .cen-more { color:#3f6b4d; margin-top:2px; }
+  #census .cen-none { color:#ffc95c; margin-top:8px; text-align:center; line-height:1.5; }
+  #foxmark { position:absolute; pointer-events:none; opacity:.85; }
+  .strip { position:absolute; left:0; text-align:center; color:#3f6b4d; width:100%; padding:0 12px; box-sizing:border-box; }
+</style>
+<link rel="manifest" href="signal-scope-v4.webmanifest">
+<meta name="theme-color" content="#07130b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Signal Scope V4">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<!-- apex-universal-container v1 -->
+</head>
+<body>
+<div id="stage">
+  <div id="fall"></div>
+  <canvas id="foxbg"></canvas>
+  <canvas id="scope"></canvas>
+  <canvas id="pulse"></canvas>
+  <canvas id="freq"></canvas>
+  <div class="vignette"></div>
+  <div id="brand">SIGNAL WATCH</div>
+  <div id="batt"></div>
+  <div id="clock">--:--</div>
+  <div id="date">—</div>
+  <div id="wx"></div>
+  <div id="bios"></div>
+  <div id="mode">SCOPE STANDBY</div>
+  <div id="invbtn">INVESTIGATE</div>
+  <div id="cenbtn">CENSUS</div>
+  <div id="foxmark"></div>
+  <div id="census"></div>
+  <div class="strip">APEX SIGNAL WATCH · FOX HUNT EDITION · SCOPE SHOWS SIGNAL PRESENCE ONLY · NO POSITION FIX · TINYRADAR.COM</div>
+  <div class="strip" id="strip2">READINGS SHOWN ONLY WHEN SENSORS ANSWER · PINS ARE GENERALIZED ASSUMPTIONS — PRESENCE + STRENGTH, NEVER SURVEYED POSITION</div>
+</div>
+<script>
+// SWEEP-CLOCK PRIMING (SWEEP FIX, Nov 11, 2026; corrected same day after a
+// post-merge bench caught the first version freezing the pulse/freq loops):
+// drawScope used to trust the raw rAF timestamp; under a hidden tab or a
+// throttled WebView the delivered timestamps warp, and % 4000 turned that warp
+// into needle teleports. This wrapper gives EVERY rAF callback of the face a
+// timestamp from a MONOTONIC SWEEP CLOCK: __sweepTime advances only by real
+// frame deltas (performance.now), each clamped to 50ms, so no callback can
+// ever see time jump or run backwards. drawScope advances on its own
+// performance.now clock (see SWEEP FIX in drawScope); this wrapper exists so
+// the face's OTHER timestamp-driven loops (pulse ECG phase, freq strip) ride
+// the same warp-proof clock instead of the raw rAF timestamp. The wrapper
+// stays installed for the life of the page; it adds one closure per frame.
+(function () {
+  var real = window.requestAnimationFrame.bind(window);
+  var last = -1;
+  window.__sweepTime = 0;
+  window.requestAnimationFrame = function (cb) {
+    return real(function () {
+      var t = performance.now();
+      if (last >= 0) window.__sweepTime += Math.min(50, Math.max(0, t - last));
+      last = t;
+      cb(window.__sweepTime);
+    });
+  };
+})();
+</script>
+<script>
+  // SIGNAL SCOPE V4 — FOX HUNT EDITION (truth fix, Nov 13, 2026).
+  // The face the owner described (Nov 7, 2026): falling digits behind glass,
+  // a HEARTBEAT MONITOR across the middle band, a FREQUENCY strip along the
+  // bottom, BIOS readouts down the left edge, and the green radar SCOPE.
+  //
+  // V5 / TRUTH FIX (Nov 13, 2026, owner: "those need to not be lying — if
+  // the data is available on ingest it needs to fill; the simulation should
+  // only be running when simulation has to run"):
+  //   * Every readout binds to the best REAL ingest reachable in the
+  //     environment it runs in (web APIs + the estate's native-container
+  //     bridges). Where no source exists, the tile reads NO MEASURE /
+  //     NO FEED — never a plausible invented number.
+  //   * The SCOPE carries the product's core display: access points the
+  //     device can actually hear, as GENERALIZED SUPERPOSITION PINS
+  //     (Fox Hunt spec, Nov 13) — accumulated scan snapshots, RSSI rings,
+  //     GPS-anchored multi-position geometry where fixes exist; a pin is
+  //     an ASSUMPTION, rendered as one (tentative when young, firm when
+  //     many samples agree, fading as its evidence ages). Both bands are
+  //     drawn and distinguishable; the CONNECTED AP is drawn as the live
+  //     pipe, distinct from merely-heard neighbors.
+  //   * The FREQUENCY strip is a real sniffer display: per-channel energy
+  //     from the latest scan snapshot — or a flat NO FEED line when there
+  //     is no snapshot. It never free-runs a decorative waveform again.
+  //   * The HEARTBEAT climbs a source ladder and says whose heart it is:
+  //     BIO (the registered device's real biometric HR) -> FACTORY (the
+  //     house Phase-Envelope beat, network-exposed) -> LOCAL (this
+  //     device's own timer tick). The source is drawn ON the strip.
+  //   * The NET row reports the ACTUAL transport. A 5 GHz Wi-Fi band is
+  //     not "5G": a cellular generation is displayed only when the OS
+  //     telephony stack reports it through the container bridge.
+  //   * SIMULATION QUARANTINE: no simulated value is ever the silent
+  //     default. If a bridge payload declares sim:true (a container in
+  //     demo mode), the face flies a SIM flag on the mode line for as
+  //     long as simulated values are on screen.
+  //   * EMITTER CENSUS (Nov 13, 2026, owner's reiteration order): a
+  //     CENSUS mode beside the hunt — session totals by radio, every
+  //     emitter heard ordered by strength, a NOTABLE section, and a
+  //     date-stamped FIRST-APPEARANCE LOG fed by a persistent
+  //     seen-store. The census eats the same bridge snapshots as the
+  //     scope; radios the bridge never reports read NO MEASURE, and
+  //     the panel prints the standing rule on its face: RSSI IS
+  //     SIGNAL STRENGTH, NOT DISTANCE. See the CENSUS block below.
+  //   * FOX HUNT layer: sampled-by-default battery governor (periodic
+  //     snapshots, the dial replays the sampled picture with its age
+  //     honest); a wearer-toggled INVESTIGATE button runs the promiscuous
+  //     call-retry event at full persistence; tapping a pin selects it
+  //     for the hunt, and Level 2 hotter/colder haptics derive ONLY from
+  //     that AP's measured RSSI (+ alignment where a frame heading is
+  //     honestly known) via navigator.vibrate where exposed.
+  //   * The wireframe fox (third-generation night-vision language:
+  //     phosphor-green line geometry, bloom on lit elements, the eyes
+  //     bloom hardest) hovers in the background layer. Atmosphere lives
+  //     on the fox layer only; the instruments stay crisp.
+  //
+  // V6 / TRUTH FIX (Nov 15, 2026, owner field charge: "word render
+  // overlap on signal scope version four — false data. Observation
+  // generated in a document object model. Law violation." — graded
+  // against his Nov 10 + Nov 13 rulings and the Nov 15 restatements):
+  //   * MOTION IS A CLAIM (owner, Nov 15): a running trace asserts a
+  //     live feed. Every animated element now binds to a real source,
+  //     runs as a DECLARED simulation (the SIM flag), or HOLDS STILL
+  //     at its honest state. The V5 LOCAL rung failed this test: its
+  //     metronome comb scrolled and its heart swelled with NO source
+  //     bound — movement dressed as a heartbeat. The comb is GONE.
+  //   * THE BEAT LADDER is now BIO -> AP PING -> FACTORY -> TICK:
+  //       BIO     — real HR (as V5). The heart is a heart.
+  //       AP PING — the ROUTER HEARTBEAT (owner, Nov 15): beats are
+  //                 real ping answers from the connected access point
+  //                 (ApexPing bridge / ApexNet.pingMs); the wearer sees
+  //                 the AP is alive because it keeps answering. The
+  //                 marker is a radio pip, never a heart.
+  //       FACTORY — the company heartbeat (owner's settled fallback:
+  //                 "the heartbeat of the Chevrolet"), labeled.
+  //       TICK    — no beat source answers: the strip HOLDS STILL —
+  //                 flat line + the words TICK · NO HEARTBEAT FEED.
+  //                 A tick never wears the heartbeat costume.
+  //   * THE GATE STATE WAVEFORM (owner, Nov 15): when no RF snapshot
+  //     is fresh but a ping series is bound, the bottom strip draws
+  //     THAT series — ping RTT history — labeled GATE with its RTT
+  //     (distance-to hint) and jitter (stability) printed. A waveform
+  //     with a source at last; unbound, it holds still (NO FEED).
+  //   * THE SWEEP PARKS: with no RF feed the needle rests at the top
+  //     and no wedge turns — a turning sweep over an empty dial
+  //     asserts a listening watch that is not listening (Nov 10:
+  //     "presence theatre"). It turns again when a snapshot binds.
+  //   * BOTTOM BAND REBUILT: the strips, button, and scope are now
+  //     ONE MEASURED STACK — strip heights are read from the laid-out
+  //     DOM and the scope shrinks to fit what remains, so wrapped
+  //     words can never stack onto the button or each other again
+  //     (the V5 fixed-offset stack collapsed at real widths). The
+  //     bios column starts below the clock block, and the beat
+  //     marker moved to the right cluster, under its source label —
+  //     out of the bios column's way.
+  //   * TABLE SERVICE (owner, Nov 15) + THE LOKMAT STANDARD: power
+  //     discipline WITHOUT thinning the data. Ingest is served in
+  //     full-quality timed services on ONE 1 s service timer (was:
+  //     250 ms tick + 500 ms reads + 500 ms scan + 700 ms hunt, all
+  //     free-running, all awake while hidden). Prepare the plate,
+  //     serve the meal at full quality, remove the plate, clean it,
+  //     invite back — ad infinitum. Draw loops STOP when hidden
+  //     (they no longer re-queue into the dark); still states are
+  //     drawn once per service instead of 60x/s; the factory fetch
+  //     backs off while unanswered. When the face closes, its own
+  //     code has already stopped everything — the device optimizer
+  //     should find nothing to forgive. (His warning, verbatim, for
+  //     the alternative: continuous grazing gets you "a fat baby
+  //     with a bad attitude that don't fit in nothing.")
+  //
+  // V7 / ARC FIX (Nov 15, 2026, live visual check on the merged V6):
+  // the V6 bench proved the bottom stack at four viewports, but its
+  // collision filter charged only text x text / text x button
+  // ELEMENT boxes — canvas pairs were excluded as "glass
+  // composition", so drawn ink was never measured against glyphs.
+  // The mode row was placed by dial-relative math (top ≈ CY +
+  // 0.451D) while the circle's bottom is CY + 0.5D and the stage
+  // reservation never subtracted the row: the row lived INSIDE
+  // the dial's lower crescent at every size, and the outer bezel
+  // (radius R-2, the thick bright arc) struck its glyphs wherever
+  // the text ran wider than the chord at that height. The owner's
+  // eye caught it live at 1919x998 — crossings through HEARTBEAT
+  // and the separator before RF — a viewport class (wide/short
+  // desktop) the bench had never run. V7: the mode row JOINS THE
+  // MEASURED STACK (reserved above the button, below the stage);
+  // the scope is sized into the stage that remains above it, so
+  // the circle's full extent — bezel outer edge included — is
+  // contained above the row at every viewport. No honesty
+  // behavior changes: the ladder, the still states, the GATE
+  // waveform, table service, and compass registration are V6's,
+  // untouched. The bench now runs SIX viewports and an ARC test
+  // (bezel annulus vs mode ink) beside the charged set.
+  var stage = document.getElementById('stage');
+  var fallEl = document.getElementById('fall');
+  var cv = document.getElementById('scope');
+  var ctx = cv.getContext('2d');
+  var pv = document.getElementById('pulse');
+  var pctx = pv.getContext('2d');
+  var fv = document.getElementById('freq');
+  var fctx = fv.getContext('2d');
+  var fxv = document.getElementById('foxbg');
+  var fxctx = fxv.getContext('2d');
+  var PW = 0, PH = 0, FW = 0, FH = 0;
+  var W = 0, H = 0, CX = 0, CY = 0, R = 0, built = false;
+  var streams = [];
+  var GREEN = '#39ff6a', GREEN_DIM = '#166b32', GREEN_FAINT = 'rgba(57,255,106,.28)';
+  var sweepNow = 0, sweepPrev = -1; // monotonic sweep clock (see SWEEP FIX in drawScope); sweepPrev -1 = unprimed
+  var shades = ['#39ff6a', '#27c452', '#166b32', '#0b3d1d'];
+  function bit() { return Math.random() > 0.5 ? 1 : 0; }
+  function renderFall(st) {
+    var html = '';
+    for (var i = 0; i < st.chars.length; i++) html += (i === 0) ? '<b style="color:#b6ffd0;font-weight:400">' + st.chars[i] + '</b>' : st.chars[i];
+    st.el.innerHTML = html;
+  }
+  function buildFall() {
+    fallEl.innerHTML = ''; streams = [];
+    var fallFont = Math.max(9, Math.floor(H * 0.024));
+    var cols = Math.max(10, Math.floor(W / (fallFont * 1.5)));
+    var len = Math.max(20, Math.floor(H / (fallFont * 1.1)));
+    for (var c = 0; c < cols; c++) {
+      var col = document.createElement('div');
+      col.className = 'col';
+      col.style.fontSize = fallFont + 'px'; col.style.lineHeight = '1.5'; col.style.letterSpacing = '0.35em';
+      col.style.left = Math.floor(c * W / cols) + 'px';
+      col.style.color = shades[c % shades.length];
+      // dimmed well below V2 scope brightness — the fall is background here
+      col.style.opacity = (0.13 + (c % 5) * 0.045).toFixed(2);
+      fallEl.appendChild(col);
+      var s = []; for (var i = 0; i < len; i++) s.push(bit());
+      streams.push({ el: col, chars: s, speed: 1 + (c % 3), tick: 0 });
+    }
+  }
+  function stepFall() {
+    for (var i = 0; i < streams.length; i++) {
+      var st = streams[i];
+      st.tick++;
+      if (st.tick % st.speed === 0) { st.chars.pop(); st.chars.unshift(bit()); renderFall(st); }
+    }
+  }
+  function measure() {
+    var vv = window.visualViewport;
+    W = Math.floor(vv ? vv.width : window.innerWidth);
+    H = Math.floor(vv ? vv.height : window.innerHeight);
+    if (!W || !H) { W = document.documentElement.clientWidth || 300; H = document.documentElement.clientHeight || 400; }
+  }
+  function layout() {
+    measure();
+    stage.style.width = W + 'px'; stage.style.height = H + 'px';
+    fallEl.style.width = W + 'px'; fallEl.style.height = H + 'px';
+    fxv.width = W; fxv.height = H;
+    fxv.style.width = W + 'px'; fxv.style.height = H + 'px';
+    fxv.style.left = '0px'; fxv.style.top = '0px';
+    var vg = document.querySelector('.vignette'); vg.style.width = W + 'px'; vg.style.height = H + 'px';
+    // ================================================================
+    // THE BOTTOM STACK, MEASURED (V6 truth fix). V5 positioned the
+    // strips, the button, and the scope from independent fixed
+    // offsets; at real widths the strips wrap taller than the
+    // offsets assumed and the words stack onto the button and each
+    // other (owner's field charge, Nov 15, 2026). Now the stack is
+    // built bottom-up from MEASURED heights: fonts are set first,
+    // the laid-out strip heights are read back from the DOM, the
+    // button is placed above them, and the scope is sized to fit
+    // the stage that remains. Wrapped words make the stack taller
+    // and the scope smaller — they can never overlap again.
+    // ================================================================
+    var M = Math.min(W, H);
+    var stripFont = Math.max(9, Math.min(13, Math.floor(H * 0.020)));
+    var strip1 = document.querySelector('.strip');
+    var strip2 = document.getElementById('strip2');
+    strip1.style.fontSize = stripFont + 'px'; strip1.style.lineHeight = '1.35';
+    strip2.style.fontSize = stripFont + 'px'; strip2.style.lineHeight = '1.35';
+    var gap = Math.max(4, Math.floor(H * 0.008));
+    var botM = Math.floor(H * 0.012);
+    var s1h = strip1.offsetHeight, s2h = strip2.offsetHeight;
+    strip1.style.bottom = botM + 'px';
+    strip2.style.bottom = (botM + s1h + gap) + 'px';
+    var inv = document.getElementById('invbtn');
+    var invW = Math.floor(M * 0.46), invH = Math.max(30, Math.floor(M * 0.058));
+    var stackTop = H - (botM + s1h + gap + s2h + gap + invH);
+    inv.style.width = invW + 'px'; inv.style.height = invH + 'px';
+    inv.style.lineHeight = invH + 'px';
+    inv.style.left = Math.floor(W / 2 - invW / 2) + 'px';
+    inv.style.top = stackTop + 'px';
+    inv.style.fontSize = Math.max(10, Math.floor(M * 0.030)) + 'px';
+    // corner fox mark: bottom-right, decorative only (pointer-events
+    // none in CSS), its foot aligned with the button's foot.
+    var fm = document.getElementById('foxmark');
+    var fms = Math.floor(M * 0.115);
+    fm.style.width = fms + 'px'; fm.style.height = fms + 'px';
+    fm.style.left = Math.floor(W - W * 0.03 - fms) + 'px';
+    fm.style.top = (stackTop + invH - fms) + 'px';
+    fm.innerHTML = foxSVG();
+    // ================================================================
+    // THE MODE ROW JOINS THE STACK (V7 arc fix — see the V7 header
+    // note). V6 placed the row by dial-relative math: top =
+    // floor(CY + D*0.335) + FH + floor(D*0.016) ≈ CY + 0.451D,
+    // while the circle's bottom is CY + 0.5D and availH never
+    // reserved the row — inside the crescent by construction.
+    // Now the row is reserved like every other band in the stack:
+    // its font is set on the M basis (the button's basis; at every
+    // bench viewport it is >= the old D-basis size — the text is
+    // NOT shrunk), its height is reserved arithmetically
+    // (font x 1.3) and the row is pinned single-line (nowrap) —
+    // renderMode rewrites its text every service WITHOUT a layout
+    // pass, so a row whose height depends on its text can never
+    // be reserved. The stage the scope is sized into ends at the
+    // row's top.
+    // ================================================================
+    var mode = document.getElementById('mode');
+    var modeFont = Math.max(10, Math.floor(M * 0.030));
+    var modeH = Math.ceil(modeFont * 1.3);
+    var modeTop = stackTop - gap - modeH;
+    mode.style.left = '0px'; mode.style.width = W + 'px';
+    mode.style.top = modeTop + 'px';
+    mode.style.bottom = 'auto';
+    mode.style.height = modeH + 'px';
+    mode.style.fontSize = modeFont + 'px';
+    mode.style.lineHeight = '1.3';
+    mode.style.whiteSpace = 'nowrap';
+    // The scope lives in the stage ABOVE the stack — the stack
+    // now includes the mode row, so the circle's full extent
+    // (bezel outer edge included) stays above the row.
+    var availH = modeTop - Math.floor(H * 0.012);
+    var D = Math.floor(Math.min(W * 0.94, availH * 0.98));
+    R = Math.floor(D / 2);
+    CX = Math.floor(W / 2); CY = Math.floor(availH / 2) + Math.floor(H * 0.006);
+    cv.width = D; cv.height = D;
+    cv.style.width = D + 'px'; cv.style.height = D + 'px';
+    cv.style.left = (CX - R) + 'px'; cv.style.top = (CY - R) + 'px';
+    // ECG strip: full-bleed across the MIDDLE band (owner's placement)
+    PW = W; PH = Math.floor(D * 0.15);
+    pv.width = PW; pv.height = PH;
+    pv.style.width = PW + 'px'; pv.style.height = PH + 'px';
+    pv.style.left = '0px';
+    pv.style.top = Math.floor(CY - PH / 2) + 'px';
+    // frequency strip: along the BOTTOM of the dial, above the stack
+    FW = Math.floor(D * 0.92); FH = Math.floor(D * 0.10);
+    fv.width = FW; fv.height = FH;
+    fv.style.width = FW + 'px'; fv.style.height = FH + 'px';
+    fv.style.left = Math.floor(CX - FW / 2) + 'px';
+    fv.style.top = Math.floor(CY + D * 0.335) + 'px';
+    var brand = document.getElementById('brand');
+    brand.style.left = '0px'; brand.style.width = W + 'px';
+    brand.style.top = Math.floor(CY - R + D * 0.055) + 'px';
+    brand.style.fontSize = Math.max(11, Math.floor(D * 0.038)) + 'px';
+    var batt = document.getElementById('batt');
+    batt.style.width = Math.floor(D * 0.30) + 'px';
+    batt.style.left = Math.floor(CX + R - D * 0.34) + 'px';
+    batt.style.top = Math.floor(CY - R + D * 0.115) + 'px';
+    batt.style.fontSize = Math.max(11, Math.floor(D * 0.042)) + 'px';
+    var clock = document.getElementById('clock');
+    clock.style.left = '0px'; clock.style.width = W + 'px';
+    clock.style.top = Math.floor(CY - D * 0.35) + 'px';
+    clock.style.fontSize = Math.floor(D * 0.135) + 'px';
+    var date = document.getElementById('date');
+    date.style.left = '0px'; date.style.width = W + 'px';
+    date.style.top = Math.floor(CY - D * 0.225) + 'px';
+    date.style.fontSize = Math.max(11, Math.floor(D * 0.040)) + 'px';
+    var wx = document.getElementById('wx');
+    wx.style.left = '0px'; wx.style.width = W + 'px';
+    wx.style.top = Math.floor(CY - D * 0.175) + 'px';
+    wx.style.fontSize = Math.max(10, Math.floor(D * 0.034)) + 'px';
+    // bios column: down the LEFT edge — but it starts BELOW the
+    // clock/date/wx block (V6: in V5 it started at CY-0.33D and its
+    // first rows rendered under the clock's glyphs at watch widths).
+    var bios = document.getElementById('bios');
+    bios.style.left = Math.floor(W * 0.035) + 'px';
+    bios.style.top = Math.floor(CY - D * 0.175 + Math.max(10, Math.floor(D * 0.034)) + D * 0.022) + 'px';
+    bios.style.width = Math.floor(D * 0.50) + 'px';
+    bios.style.fontSize = Math.max(9, Math.floor(D * 0.028)) + 'px';
+    bios.style.lineHeight = '1.42';
+    // mode line: reserved and placed in the measured stack at
+    // the top of layout() (V7 — see THE MODE ROW JOINS THE STACK
+    // above). Its row sits between the stage and the button,
+    // uncontested by text AND by the dial's own rim; the
+    // indication stays legible — a beat-source label buried in
+    // stacked words is not indicated (owner, Nov 15).
+    // CONTROL ROW (census merge, Nov 19, 2026): CENSUS joins
+    // INVESTIGATE in the measured stack's button row — the row the
+    // stack above reserved. The single centered button splits into
+    // two half buttons side by side on the same row metrics
+    // (stackTop / invH / gap), so the stack's reservations stay
+    // exact and the row keeps its clear margin over the strips.
+    var cenb = document.getElementById('cenbtn');
+    var btnW2 = Math.floor(M * 0.44);
+    inv.style.width = btnW2 + 'px';
+    inv.style.left = Math.floor(W / 2 - btnW2 - gap) + 'px';
+    cenb.style.width = btnW2 + 'px'; cenb.style.height = invH + 'px';
+    cenb.style.lineHeight = invH + 'px';
+    cenb.style.left = Math.floor(W / 2 + gap) + 'px';
+    cenb.style.top = stackTop + 'px';
+    cenb.style.fontSize = Math.max(10, Math.floor(M * 0.030)) + 'px';
+    // CENSUS panel: the central glass — from just under the brand
+    // line down to the stack's button row, never into the strips
+    // or the no-fly band beneath them.
+    var cpan = document.getElementById('census');
+    cpan.style.left = Math.floor(W * 0.035) + 'px';
+    cpan.style.width = Math.floor(W * 0.93) + 'px';
+    cpan.style.top = Math.floor(H * 0.045) + 'px';
+    cpan.style.height = Math.max(80, Math.floor(stackTop - gap - H * 0.045)) + 'px';
+    cpan.style.fontSize = Math.max(10, Math.floor(M * 0.030)) + 'px';
+    built = true;
+    buildFall();
+  }
+  // ================================================================
+  // THE WIREFRAME FOX — third-generation night-vision language:
+  // phosphor-green LINE GEOMETRY only, glow/bloom on the lit elements,
+  // the piercing eyes bloom hardest. Drawn in the face's own code.
+  // The fox lives in the BACKGROUND layer and HOVERS (a slow float);
+  // the instruments draw over it and stay crisp — atmosphere never
+  // fogs the data.
+  // ================================================================
+  var FOX_PTS = {
+    earLT: [-0.46, -0.86], earLO: [-0.66, -0.30], earLI: [-0.26, -0.46], earLM: [-0.47, -0.55],
+    earRT: [0.46, -0.86], earRO: [0.66, -0.30], earRI: [0.26, -0.46], earRM: [0.47, -0.55],
+    headL: [-0.60, -0.02], headR: [0.60, -0.02],
+    cheekL: [-0.46, 0.34], cheekR: [0.46, 0.34],
+    jawL: [-0.24, 0.60], jawR: [0.24, 0.60], chin: [0, 0.80],
+    browL: [-0.30, -0.30], browR: [0.30, -0.30], browC: [0, -0.35],
+    noseT: [0, 0.32], nose: [0, 0.52], muzL: [-0.15, 0.40], muzR: [0.15, 0.40],
+    eyeL: [-0.28, -0.04], eyeR: [0.28, -0.04]
+  };
+  var FOX_LINES = [
+    ['earLT', 'earLO'], ['earLO', 'headL'], ['headL', 'cheekL'], ['cheekL', 'jawL'], ['jawL', 'chin'],
+    ['chin', 'jawR'], ['jawR', 'cheekR'], ['cheekR', 'headR'], ['headR', 'earRO'], ['earRO', 'earRT'],
+    ['earRT', 'earRI'], ['earRI', 'browR'], ['earLT', 'earLI'], ['earLI', 'browL'],
+    ['earLO', 'earLM'], ['earLM', 'earLI'], ['earRO', 'earRM'], ['earRM', 'earRI'],
+    ['browL', 'browC'], ['browC', 'browR'],
+    ['noseT', 'muzL'], ['noseT', 'muzR'], ['muzL', 'nose'], ['muzR', 'nose'], ['nose', 'chin'],
+    ['eyeL', 'muzL'], ['eyeR', 'muzR']
+  ];
+  function foxEyePath(g, ex, ey, s, open) {
+    g.beginPath();
+    g.moveTo(ex - 0.088 * s, ey);
+    g.quadraticCurveTo(ex, ey - 0.042 * s * open, ex + 0.088 * s, ey);
+    g.quadraticCurveTo(ex, ey + 0.042 * s * open, ex - 0.088 * s, ey);
+    g.closePath();
+  }
+  function drawFox(now) {
+    if (!built) return;
+    fxctx.clearRect(0, 0, W, H);
+    var D = R * 2, s = D * 0.66;
+    var hoverY = Math.sin(now / 2800) * D * 0.009;
+    var cxp = CX, cyp = CY + hoverY;
+    function P(k) { return [cxp + FOX_PTS[k][0] * s, cyp + FOX_PTS[k][1] * s]; }
+    fxctx.lineWidth = Math.max(1, Math.floor(D * 0.0035));
+    fxctx.lineJoin = 'round';
+    fxctx.shadowColor = 'rgba(57,255,106,.45)'; fxctx.shadowBlur = D * 0.012;
+    fxctx.strokeStyle = 'rgba(57,255,106,.17)';
+    fxctx.beginPath();
+    for (var i = 0; i < FOX_LINES.length; i++) {
+      var a = P(FOX_LINES[i][0]), b = P(FOX_LINES[i][1]);
+      fxctx.moveTo(a[0], a[1]); fxctx.lineTo(b[0], b[1]);
+    }
+    fxctx.stroke();
+    fxctx.shadowBlur = 0;
+    // THE EYES — the brightest elements on the face's night layer:
+    // double-pass fill with hard bloom, and a slow blink so the haunt
+    // reads alive without ever competing with a readout.
+    var blink = (now % 4700) < 90 ? 0.12 : 1;
+    var el = P('eyeL'), er = P('eyeR');
+    fxctx.save();
+    fxctx.shadowColor = '#39ff6a'; fxctx.shadowBlur = D * 0.05;
+    fxctx.fillStyle = 'rgba(150,255,190,.92)';
+    foxEyePath(fxctx, el[0], el[1], s, blink); fxctx.fill();
+    foxEyePath(fxctx, er[0], er[1], s, blink); fxctx.fill();
+    fxctx.fill();
+    fxctx.restore();
+    fxctx.fillStyle = 'rgba(240,255,246,.95)';
+    foxEyePath(fxctx, el[0], el[1], s * 0.45, blink); fxctx.fill();
+    foxEyePath(fxctx, er[0], er[1], s * 0.45, blink); fxctx.fill();
+  }
+  function foxSVG() {
+    var pts = '';
+    function q(k) { return (FOX_PTS[k][0] * 100).toFixed(0) + ',' + (FOX_PTS[k][1] * 100).toFixed(0); }
+    for (var i = 0; i < FOX_LINES.length; i++) pts += '<polyline points="' + q(FOX_LINES[i][0]) + ' ' + q(FOX_LINES[i][1]) + '"/>';
+    return '<svg viewBox="-100 -100 200 200" width="100%" height="100%" fill="none" stroke="#39ff6a" stroke-width="3" stroke-linejoin="round" opacity="0.9">' + pts +
+      '<ellipse cx="-28" cy="-4" rx="9" ry="4" fill="#9fffbe" stroke="none"/>' +
+      '<ellipse cx="28" cy="-4" rx="9" ry="4" fill="#9fffbe" stroke="none"/></svg>';
+  }
+  // ================================================================
+  // SUPERPOSITION PIN ENGINE (Fox Hunt spec §1, §6).
+  // A pin is an ASSUMPTION accumulated across scan snapshots — never a
+  // surveyed position. Distance on the scope is the generalized RSSI
+  // ring (quantized, from the latest snapshot). Direction comes from
+  // GPS-ANCHORED MULTI-POSITION GEOMETRY when the wearer has given the
+  // frame two positions far enough apart (rings around known positions
+  // intersect into an assumed point); with fewer anchors the pin sits
+  // in a wide tentative SECTOR at a stable per-AP azimuth and renders
+  // tentative. Firmness (drawn, not claimed) grows with sample count
+  // and anchor agreement. Sensor-poor rule (§6): NO compass azimuth is
+  // ever invented — a magnetometer/container heading may FUSE into the
+  // frame rotation when one honestly reports, but the GPS-anchored
+  // path is the baseline and works with no magnetic sensor at all.
+  // Shape validity = min(time bound, displacement bound): re-anchor
+  // at ~10 m of GPS displacement or the 60 s freshness bound.
+  // ================================================================
+  var SNAP_FRESH_MS = 60000;      // freshness bound: past it, RF = NO FEED
+  var PIN_DROP_MS = 150000;       // an AP unheard this long loses its pin
+  var REANCHOR_M = 10;            // displacement bound (spec §6)
+  var RF = { snapAt: 0, aps: [], connBssid: '', pins: {}, order: [] };
+  var FRAME = { origin: null, x: 0, y: 0, courseDeg: null, courseAt: 0, headingDeg: null, headingAt: 0, fixes: 0, reanchorAt: 0 };
+  var HUNT = { bssid: null, score: 0 };
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function rssiFrac(rssi) { return clamp(((-rssi) - 32) / 58, 0.07, 0.97); } // -32dBm -> hub, -90 -> rim
+  function rssiMeters(rssi) { // free-space estimate, n=2.5, -45 dBm @ 1 m — an ESTIMATE, used only as ring geometry
+    var d = Math.pow(10, (-45 - rssi) / 25);
+    return clamp(d, 2, 90);
+  }
+  function hashAz(key) {
+    var h = 2166136261;
+    for (var i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = (h * 16777619) >>> 0; }
+    return (h % 6283) / 1000; // stable per-BSSID sector azimuth, 0..2pi
+  }
+  function frameHeadingRad() {
+    var now = Date.now();
+    if (FRAME.courseDeg !== null && now - FRAME.courseAt < 30000) return FRAME.courseDeg * Math.PI / 180;
+    if (FRAME.headingDeg !== null && now - FRAME.headingAt < 30000) return FRAME.headingDeg * Math.PI / 180;
+    return null;
+  }
+  function ingestWifi(snap) {
+    // snap: { at(epoch ms), aps:[{ssid,bssid,bandGhz,channel,rssi}], connectedBssid, sim }
+    if (!snap || typeof snap.at !== 'number') return;
+    var now = Date.now();
+    RF.snapAt = snap.at; RF.aps = snap.aps || []; RF.connBssid = snap.connectedBssid || '';
+    if (snap.sim) SIM.on = true;
+    var anchor = FRAME.origin ? { x: FRAME.x, y: FRAME.y } : null;
+    var seen = {};
+    for (var i = 0; i < RF.aps.length; i++) {
+      var ap = RF.aps[i];
+      var key = ap.bssid || ap.ssid || ('ap' + i);
+      seen[key] = true;
+      var pin = RF.pins[key];
+      if (!pin) { pin = RF.pins[key] = { key: key, samples: 0, anchors: [], side: 0, solved: null, ringF: null, azFallback: hashAz(key), lastSeen: 0, _px: -1, _py: -1 }; }
+      pin.ssid = ap.ssid || ''; pin.bandGhz = ap.bandGhz || 0; pin.channel = ap.channel || 0;
+      pin.rssi = ap.rssi; pin.lastSeen = now; pin.samples++;
+      var f = rssiFrac(ap.rssi);
+      pin.ringF = (pin.ringF === null) ? f : pin.ringF + (f - pin.ringF) * 0.45;
+      if (anchor) {
+        pin.anchors.push({ x: anchor.x, y: anchor.y, m: rssiMeters(ap.rssi), at: now });
+        if (pin.anchors.length > 6) pin.anchors.shift();
+      }
+      solvePin(pin);
+    }
+    RF.order = Object.keys(seen);
+    for (var k in RF.pins) {
+      if (!seen[k] && now - RF.pins[k].lastSeen > PIN_DROP_MS) delete RF.pins[k];
+    }
+    censusIngest(snap);
+    renderBios();
+    renderMode();
+  }
+  function solvePin(pin) {
+    // Needs two anchors far enough apart for ring intersection to mean
+    // anything; below that the pin stays a sector assumption.
+    if (pin.anchors.length < 2) { pin.solved = null; return; }
+    var a1 = pin.anchors[0], a2 = null, best = -1;
+    for (var i = 1; i < pin.anchors.length; i++) {
+      var dx = pin.anchors[i].x - a1.x, dy = pin.anchors[i].y - a1.y, d2 = dx * dx + dy * dy;
+      if (d2 > best) { best = d2; a2 = pin.anchors[i]; }
+    }
+    if (!a2 || best < 64) { pin.solved = null; return; } // < 8 m spread: no geometry
+    var d = Math.sqrt(best);
+    var ux = (a2.x - a1.x) / d, uy = (a2.y - a1.y) / d;
+    var mid = (a1.m * a1.m - a2.m * a2.m + d * d) / (2 * d); // distance from a1 along the axis
+    var h2 = a1.m * a1.m - mid * mid;
+    var px = a1.x + ux * mid, py = a1.y + uy * mid;
+    if (h2 <= 0) { pin.solved = { x: px, y: py }; return; } // rings touch/cross on-axis: midpoint is the assumption
+    var h = Math.sqrt(h2);
+    var c1 = { x: px - uy * h, y: py + ux * h }, c2 = { x: px + uy * h, y: py - ux * h };
+    if (!pin.side) {
+      // First solve: prefer the candidate in the wearer's forward
+      // hemisphere when a course is honestly known; else keep c1.
+      var hd = frameHeadingRad();
+      if (hd !== null) {
+        var hx = Math.sin(hd), hy = Math.cos(hd);
+        var d1 = (c1.x - FRAME.x) * hx + (c1.y - FRAME.y) * hy;
+        var d2 = (c2.x - FRAME.x) * hx + (c2.y - FRAME.y) * hy;
+        pin.side = d2 > d1 ? 2 : 1;
+      } else pin.side = 1;
+    }
+    pin.solved = (pin.side === 2) ? c2 : c1;
+  }
+  function pinPos(pin) {
+    // Returns scope polar {ang (rad, 0 = up, clockwise +), frac}.
+    if (pin.solved && FRAME.origin) {
+      var dx = pin.solved.x - FRAME.x, dy = pin.solved.y - FRAME.y;
+      return { ang: Math.atan2(dx, dy), frac: pin.ringF, solved: true };
+    }
+    return { ang: pin.azFallback, frac: pin.ringF, solved: false };
+  }
+  function pinFirm(pin) {
+    var f = clamp(pin.samples / 8, 0.15, 1);
+    if (pin.solved) f = clamp(f + 0.25, 0, 1);
+    return f;
+  }
+  function drawPins(c, Rr, now) {
+    var age = Date.now() - RF.snapAt;
+    if (!RF.snapAt || age > SNAP_FRESH_MS) return; // NO FEED: the scope stays honestly empty
+    var alphaBase = 1 - 0.62 * (age / SNAP_FRESH_MS); // replay ages visibly (governor, spec §4)
+    for (var i = 0; i < RF.order.length; i++) {
+      var pin = RF.pins[RF.order[i]];
+      if (!pin || pin.ringF === null) continue;
+      var pos = pinPos(pin), firm = pinFirm(pin);
+      var rp = pos.frac * (Rr - 8);
+      var x = c + Math.sin(pos.ang) * rp, y = c - Math.cos(pos.ang) * rp;
+      pin._px = x; pin._py = y;
+      var conn = pin.key === RF.connBssid;
+      var hunted = HUNT.bssid === pin.key;
+      var a = alphaBase * (0.40 + 0.60 * firm);
+      var sz = Rr * 0.014 + firm * Rr * 0.011;
+      // tentative sector for young, unsolved assumptions
+      if (!pos.solved && pin.samples < 3) {
+        ctx.beginPath(); ctx.moveTo(c, c);
+        ctx.arc(c, c, rp, pos.ang - 0.55 - Math.PI / 2, pos.ang + 0.55 - Math.PI / 2);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(57,255,106,' + (0.05 * a) + ')'; ctx.fill();
+      }
+      ctx.save();
+      ctx.globalAlpha = a;
+      if (conn) {
+        // THE PIPE: the connected AP — white-hot core, breathing ring.
+        var pr = sz * (1.9 + 0.3 * Math.sin(now / 300));
+        ctx.beginPath(); ctx.arc(x, y, pr, 0, Math.PI * 2);
+        ctx.strokeStyle = '#eaffef'; ctx.lineWidth = Math.max(1.5, Rr * 0.008); ctx.stroke();
+      }
+      if (hunted) {
+        ctx.beginPath(); ctx.arc(x, y, sz * 1.8, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ffc95c'; ctx.lineWidth = Math.max(1.5, Rr * 0.008); ctx.stroke();
+      }
+      ctx.beginPath();
+      if (pin.bandGhz >= 4.5 && pin.bandGhz < 5.5) {
+        // 5 GHz: diamond
+        ctx.moveTo(x, y - sz); ctx.lineTo(x + sz, y); ctx.lineTo(x, y + sz); ctx.lineTo(x - sz, y); ctx.closePath();
+        ctx.fillStyle = conn ? '#eaffef' : GREEN; ctx.fill();
+      } else if (pin.bandGhz >= 5.5) {
+        // 6 GHz: triangle
+        ctx.moveTo(x, y - sz); ctx.lineTo(x + sz, y + sz * 0.8); ctx.lineTo(x - sz, y + sz * 0.8); ctx.closePath();
+        ctx.fillStyle = conn ? '#eaffef' : GREEN; ctx.fill();
+      } else {
+        // 2.4 GHz (and unknown band): ring circle
+        ctx.arc(x, y, sz, 0, Math.PI * 2);
+        ctx.strokeStyle = conn ? '#eaffef' : GREEN; ctx.lineWidth = Math.max(1.5, Rr * 0.007); ctx.stroke();
+        if (conn) { ctx.beginPath(); ctx.arc(x, y, sz * 0.4, 0, Math.PI * 2); ctx.fillStyle = '#eaffef'; ctx.fill(); }
+      }
+      ctx.restore();
+      if (conn && pin.ssid) {
+        ctx.save(); ctx.globalAlpha = Math.min(1, a + 0.25);
+        ctx.fillStyle = '#b6ffd0';
+        ctx.font = '700 ' + Math.max(9, Math.floor(Rr * 0.052)) + 'px ui-monospace,Menlo,Consolas,monospace';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(pin.ssid.slice(0, 12), x + sz * 2.1, y);
+        ctx.restore();
+      }
+    }
+  }
+  function drawScope(now) {
+    if (!built) return;
+    if (document.hidden) { RUN.scope = false; return; } // LOKMAT STANDARD: the loop STOPS in the dark; it does not re-queue
+    if (CENSUS.on) { requestAnimationFrame(drawScope); return; } // census owns the glass — loop stays alive, draws nothing
+    drawFox(now);
+    var d = R * 2, c = R; // canvas-local center
+    ctx.clearRect(0, 0, d, d);
+    // face glass — translucent, so the falling digits show through the scope
+    // (the video's rotation blend: digit face behind, scope face in front)
+    ctx.beginPath(); ctx.arc(c, c, R - 1, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(2,20,10,.82)'; ctx.fill();
+    // range rings (video furniture: five rings, metre scale on the scope face)
+    var rings = 5;
+    ctx.lineWidth = Math.max(1, Math.floor(R * 0.006));
+    for (var i = 1; i <= rings; i++) {
+      ctx.beginPath(); ctx.arc(c, c, (R - 4) * i / rings, 0, Math.PI * 2);
+      ctx.strokeStyle = i === rings ? GREEN : GREEN_FAINT; ctx.stroke();
+    }
+    // radial spokes every 30 degrees
+    ctx.strokeStyle = 'rgba(57,255,106,.16)';
+    for (var a = 0; a < 12; a++) {
+      var t = a * Math.PI / 6;
+      ctx.beginPath();
+      ctx.moveTo(c + Math.cos(t) * R * 0.08, c + Math.sin(t) * R * 0.08);
+      ctx.lineTo(c + Math.cos(t) * (R - 4), c + Math.sin(t) * (R - 4));
+      ctx.stroke();
+    }
+    // rim degree ticks + cardinal degree labels (scope scale, not a heading)
+    ctx.fillStyle = GREEN_DIM;
+    ctx.font = '700 ' + Math.max(10, Math.floor(R * 0.075)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var degs = ['0', '90', '180', '270'];
+    for (var k = 0; k < 4; k++) {
+      var ta = k * Math.PI / 2 - Math.PI / 2;
+      ctx.fillText(degs[k], c + Math.cos(ta) * R * 0.885, c + Math.sin(ta) * R * 0.885);
+    }
+    for (var m = 0; m < 72; m++) {
+      var tt = m * Math.PI / 36, long = (m % 6 === 0);
+      ctx.beginPath();
+      ctx.moveTo(c + Math.cos(tt) * (R - 4), c + Math.sin(tt) * (R - 4));
+      ctx.lineTo(c + Math.cos(tt) * (R - 4 - (long ? R * 0.045 : R * 0.022)), c + Math.sin(tt) * (R - 4 - (long ? R * 0.045 : R * 0.022)));
+      ctx.strokeStyle = long ? GREEN : GREEN_FAINT; ctx.stroke();
+    }
+    // ring range labels up the top radius — scale furniture, as on the video face
+    ctx.fillStyle = 'rgba(182,255,208,.75)';
+    ctx.font = '700 ' + Math.max(10, Math.floor(R * 0.062)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    var labels = ['10m', '20m', '30m', '40m', '50m'];
+    for (var j = 0; j < rings; j++) {
+      ctx.fillText(labels[j], c + R * 0.16, c - (R - 4) * (j + 1) / rings + R * 0.045);
+    }
+    // sweep: bright leading edge + fading wedge trail (one turn per 4s).
+    // SWEEP FIX (Nov 11, 2026): the bearing rides a MONOTONIC SWEEP CLOCK,
+    // never the raw frame timestamp — see the V4 header history. Period
+    // stays one turn per 4s (90 deg/s); stalled frames cost at most 50ms.
+    if (sweepPrev < 0) sweepPrev = performance.now();
+    else { var sd = performance.now() - sweepPrev; sweepNow += sd > 500 ? 16.7 : Math.min(50, Math.max(0, sd)); sweepPrev = performance.now(); }
+    // THE PARKED SWEEP (V6, motion-is-a-claim): with no live source
+    // bound, the needle rests at the top and NO wedge turns — a
+    // turning sweep over an empty dial asserts a listening watch
+    // that is not listening. It turns again when a source binds.
+    var parked = !scopeLive();
+    var ang = parked ? -Math.PI / 2 : (sweepNow % 4000) / 4000 * Math.PI * 2 - Math.PI / 2;
+    var trail = Math.PI * 0.30, slices = 18;
+    if (!parked) for (var s = slices; s >= 1; s--) {
+      var a0 = ang - trail * s / slices, a1 = ang - trail * (s - 1) / slices;
+      ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, R - 5, a0, a1); ctx.closePath();
+      ctx.fillStyle = 'rgba(57,255,106,' + (0.006 + 0.069 * (1 - (s - 1) / slices)) + ')'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.moveTo(c, c);
+    ctx.lineTo(c + Math.cos(ang) * (R - 5), c + Math.sin(ang) * (R - 5));
+    ctx.strokeStyle = '#b6ffd0'; ctx.lineWidth = Math.max(2, Math.floor(R * 0.012)); ctx.stroke();
+    // THE PINS — the product's core display (see pin engine above).
+    drawPins(c, R, now);
+    // outer bezel ring
+    ctx.beginPath(); ctx.arc(c, c, R - 2, 0, Math.PI * 2);
+    ctx.strokeStyle = GREEN; ctx.lineWidth = Math.max(2, Math.floor(R * 0.014)); ctx.stroke();
+    // center hub + the wearer's own marker (origin only — no fix is computed)
+    ctx.beginPath(); ctx.arc(c, c, Math.max(3, R * 0.022), 0, Math.PI * 2);
+    ctx.fillStyle = '#b6ffd0'; ctx.fill();
+    ctx.fillStyle = GREEN;
+    ctx.font = '700 ' + Math.max(10, Math.floor(R * 0.070)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    ctx.fillText('YOU', c, c + R * 0.16);
+    if (parked) { RUN.scope = false; return; } // drawn once per service while parked — no free-running loop
+    stepFall();
+    requestAnimationFrame(drawScope);
+  }
+  // A live source is bound when anything on the face is being fed:
+  // a fresh RF snapshot, a beat above TICK, an open investigation,
+  // or a hunt selection. Otherwise the dial parks (see above).
+  function scopeLive() {
+    if (INVEST.on || HUNT.bssid) return true;
+    if (BEAT.src !== 'TICK') return true;
+    return !!(RF.snapAt && (Date.now() - RF.snapAt <= SNAP_FRESH_MS));
+  }
+  // ================================================================
+  // THE HEARTBEAT MONITOR — climbs the SOURCE LADDER and draws
+  // whose beat it is ON the strip (V6 ladder, owner Nov 15, 2026):
+  //   BIO     — the registered device's real biometric HR (bridge /
+  //             BT / sensor). ECG morphology, timed by the real BPM.
+  //             The waveform stays stylized — NOT a medical ECG.
+  //   AP PING — THE ROUTER HEARTBEAT: one pip per ping the connected
+  //             access point actually ANSWERED (ApexPing bridge /
+  //             ApexNet.pingMs). The AP is alive because it keeps
+  //             answering; pip height is that answer's RTT. The
+  //             marker is a radio pip — never a heart.
+  //   FACTORY — the company heartbeat: the house Phase-Envelope beat
+  //             (pulse ~3m inside the ~30m heartbeat), read from
+  //             network-exposed factory state. A slow swell wave +
+  //             phase bar: real, but NOT a heart rate.
+  //   TICK    — no beat source answers. The strip HOLDS STILL: a
+  //             flat line and the words TICK · NO HEARTBEAT FEED.
+  //             (V5 drew a scrolling metronome comb here with a
+  //             swelling heart — motion in a heartbeat costume with
+  //             nothing bound. That was the charged violation; the
+  //             comb is gone. A tick says tick.)
+  // The ladder steps DOWN as availability falls and back UP when a
+  // higher source returns. (Beat state lives in the ingest block.)
+  // ================================================================
+  function heartPath(g, x, y, s) {
+    g.beginPath();
+    g.moveTo(x, y + s * 0.92);
+    g.bezierCurveTo(x - s * 1.15, y + s * 0.18, x - s * 0.62, y - s * 0.78, x, y - s * 0.22);
+    g.bezierCurveTo(x + s * 0.62, y - s * 0.78, x + s * 1.15, y + s * 0.18, x, y + s * 0.92);
+    g.closePath();
+  }
+  function ecgY(p, base, amp) {
+    // one beat: flat, small P bump, sharp QRS spike, T bump, flat
+    if (p < 0.30) return base;
+    if (p < 0.38) return base - amp * 0.16 * Math.sin((p - 0.30) / 0.08 * Math.PI);
+    if (p < 0.43) return base + amp * 0.14 * ((p - 0.38) / 0.05);
+    if (p < 0.50) return base - amp * (((p - 0.43) / 0.07) < 0.55 ? ((p - 0.43) / 0.07) / 0.55 : 1 - (((p - 0.43) / 0.07) - 0.55) / 0.45);
+    if (p < 0.56) return base + amp * 0.30 * (1 - (p - 0.50) / 0.06);
+    if (p < 0.60) return base + amp * 0.30 - amp * 0.30 * ((p - 0.56) / 0.04);
+    if (p < 0.78) return base - amp * 0.20 * Math.sin((p - 0.60) / 0.18 * Math.PI);
+    return base;
+  }
+  function drawPulse(now) {
+    if (!built || !PW) { RUN.pulse = false; return; }
+    if (document.hidden) { RUN.pulse = false; return; } // stops in the dark (LOKMAT STANDARD)
+    if (CENSUS.on) { requestAnimationFrame(drawPulse); return; } // census owns the glass
+    pctx.clearRect(0, 0, PW, PH);
+    var base = PH * 0.60, amp = PH * 0.46, span = PW * 2.4;
+    var src = BEAT.src, beat = 0;
+    // faint baseline, as the trace rides a ruled line in the video
+    pctx.beginPath(); pctx.moveTo(0, base); pctx.lineTo(PW, base);
+    pctx.strokeStyle = 'rgba(57,255,106,.18)'; pctx.lineWidth = 1; pctx.stroke();
+    if (src === 'BIO' && S.hr) {
+      var beatMs = 60000 / S.hr;
+      var off = (now % beatMs) / beatMs * (span / 3);
+      var headP = ((now % beatMs) / beatMs - 0.43 + 1) % 1;
+      beat = Math.max(0, 1 - Math.abs(headP - 0.5) * 6); // 1 at the QRS moment
+      pctx.lineJoin = 'round'; pctx.lineCap = 'round';
+      pctx.shadowColor = 'rgba(57,255,106,.8)'; pctx.shadowBlur = PH * 0.10;
+      for (var pass = 0; pass < 2; pass++) {
+        pctx.beginPath();
+        for (var x = 0; x <= PW; x += 2) {
+          var gp = ((x + off) % span) / span, lp = gp * 3 % 1;
+          var y = ecgY(lp, base, amp);
+          if (x === 0) pctx.moveTo(x, y); else pctx.lineTo(x, y);
+        }
+        pctx.strokeStyle = pass === 0 ? 'rgba(57,255,106,.30)' : GREEN;
+        pctx.lineWidth = pass === 0 ? Math.max(3, Math.floor(PH * 0.075)) : Math.max(2, Math.floor(PH * 0.045));
+        pctx.stroke();
+      }
+      pctx.shadowBlur = 0;
+    } else if (src === 'FACTORY') {
+      var p01 = factoryPhase01();
+      beat = Math.pow(0.5 - 0.5 * Math.cos(p01 * Math.PI * 2), 2);
+      pctx.lineJoin = 'round'; pctx.lineCap = 'round';
+      pctx.shadowColor = 'rgba(57,255,106,.7)'; pctx.shadowBlur = PH * 0.08;
+      for (var fp = 0; fp < 2; fp++) {
+        pctx.beginPath();
+        for (var fx2 = 0; fx2 <= PW; fx2 += 3) {
+          var u = fx2 / PW;
+          var yy = base - amp * 0.52 * Math.pow(0.5 - 0.5 * Math.cos((u * 1.5 - p01 * 1.5) * Math.PI * 2), 1.6);
+          if (fx2 === 0) pctx.moveTo(fx2, yy); else pctx.lineTo(fx2, yy);
+        }
+        pctx.strokeStyle = fp === 0 ? 'rgba(57,255,106,.25)' : 'rgba(57,255,106,.85)';
+        pctx.lineWidth = fp === 0 ? Math.max(3, Math.floor(PH * 0.07)) : Math.max(2, Math.floor(PH * 0.04));
+        pctx.stroke();
+      }
+      pctx.shadowBlur = 0;
+      // phase bar: where the factory pulse stands, drawn not implied
+      pctx.fillStyle = 'rgba(255,201,92,.75)';
+      pctx.fillRect(0, PH - Math.max(2, PH * 0.05), PW * p01, Math.max(2, PH * 0.05));
+    } else if (src === 'APING') {
+      // THE ROUTER HEARTBEAT — one pip per ANSWERED ping, scrolling
+      // a 14 s window. Pip height is that answer's RTT (a fast AP
+      // stands tall). Nothing here moves unless an answer landed:
+      // the newest pip flashes once, the rest stand still.
+      var pnow = performance.now(), winMs = 14000;
+      pctx.lineJoin = 'round'; pctx.lineCap = 'round';
+      for (var pi = 0; pi < PING.series.length; pi++) {
+        var ans = PING.series[pi], ageMs = pnow - ans.pw;
+        if (ageMs < 0 || ageMs > winMs) continue;
+        var px = PW - (ageMs / winMs) * PW;
+        var ph2 = PH * 0.52 * clamp((170 - ans.rtt) / 170, 0.15, 1);
+        var freshPip = ageMs < 700;
+        pctx.beginPath(); pctx.moveTo(px, base); pctx.lineTo(px, base - ph2);
+        pctx.strokeStyle = freshPip ? '#eaffef' : 'rgba(57,255,106,.55)';
+        pctx.lineWidth = Math.max(2, Math.floor(PH * 0.05)); pctx.stroke();
+        pctx.beginPath(); pctx.arc(px, base - ph2, Math.max(1.5, PH * 0.045), 0, Math.PI * 2);
+        pctx.fillStyle = freshPip ? '#eaffef' : 'rgba(57,255,106,.7)'; pctx.fill();
+      }
+      beat = (PING.series.length && (pnow - PING.series[PING.series.length - 1].pw) < 700) ? 1 : 0;
+    } else {
+      // TICK — no beat source answers: the strip HOLDS STILL.
+      // Flat line (drawn above) + the words. No comb, no hearts,
+      // no motion — a tick says tick, never heartbeat.
+      pctx.fillStyle = 'rgba(255,201,92,.85)';
+      pctx.font = '700 ' + Math.max(9, Math.floor(PH * 0.21)) + 'px ui-monospace,Menlo,Consolas,monospace';
+      pctx.textAlign = 'center'; pctx.textBaseline = 'middle';
+      pctx.fillText('TICK · NO HEARTBEAT FEED', PW / 2, PH * 0.40);
+    }
+    // The marker, in the RIGHT cluster under the source label (V6:
+    // the V5 marker heart sat at the left end, inside the bios
+    // column's text). BIO and FACTORY wear the heart — one is a
+    // heart, the other is the company heartbeat by the owner's own
+    // naming. AP PING wears a radio pip. TICK wears nothing.
+    if (src === 'BIO' || src === 'FACTORY') {
+      var hs = PH * 0.15 * (1 + 0.30 * beat);
+      pctx.save();
+      pctx.shadowColor = 'rgba(57,255,106,.9)'; pctx.shadowBlur = PH * 0.16 * (0.5 + beat);
+      heartPath(pctx, PW * 0.945, PH * 0.68, hs);
+      pctx.fillStyle = GREEN; pctx.fill();
+      pctx.restore();
+    } else if (src === 'APING') {
+      var mx = PW * 0.945, my = PH * 0.68;
+      pctx.save();
+      pctx.globalAlpha = beat ? 1 : 0.45;
+      pctx.strokeStyle = GREEN; pctx.fillStyle = GREEN;
+      pctx.lineWidth = Math.max(1.5, PH * 0.05); pctx.lineCap = 'round';
+      pctx.beginPath(); pctx.arc(mx, my, Math.max(1.5, PH * 0.05), 0, Math.PI * 2); pctx.fill();
+      for (var ai = 1; ai <= 2; ai++) {
+        var rr = PH * 0.30 * ai * 0.55;
+        pctx.beginPath(); pctx.arc(mx, my, rr, -Math.PI * 0.78, -Math.PI * 0.22); pctx.stroke();
+        pctx.beginPath(); pctx.arc(mx, my, rr, Math.PI * 0.22, Math.PI * 0.78); pctx.stroke();
+      }
+      pctx.restore();
+    }
+    // THE SOURCE, drawn on the strip — whose beat this is, always.
+    var label = src === 'BIO' ? '♥ BIO' : src === 'APING' ? 'AP PING' + (PING.lastRtt !== null ? ' ' + PING.lastRtt + 'MS' : '') : src === 'FACTORY' ? '♥ FACTORY' : 'TICK';
+    pctx.fillStyle = (src === 'BIO' || src === 'APING') ? 'rgba(182,255,208,.9)' : 'rgba(255,201,92,.9)';
+    pctx.font = '700 ' + Math.max(8, Math.floor(PH * 0.20)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    pctx.textAlign = 'right'; pctx.textBaseline = 'top';
+    pctx.fillText(label, PW * 0.985, PH * 0.06);
+    if (src !== 'TICK') requestAnimationFrame(drawPulse); else RUN.pulse = false;
+  }
+  // ================================================================
+  // THE FREQUENCY STRIP — two honest modes (V6):
+  //   FREQ — a real sniffer display: bars are the per-channel energy
+  //     of the LATEST SCAN SNAPSHOT (strongest RSSI heard per channel
+  //     wins the slot; the connected AP's channel is lit white).
+  //     2.4 GHz channels 1–13 left, 5 GHz channels right. (6 GHz APs
+  //     pin on the scope; the strip's two groups are the sniffer's
+  //     honest axes.)
+  //   GATE — THE GATE STATE WAVEFORM (owner, Nov 15, 2026): when no
+  //     RF snapshot is fresh but a ping series is bound, the strip
+  //     draws THAT series — the connected AP's ping RTT history —
+  //     and says what it tells: the RTT (a labeled distance-to hint)
+  //     and the jitter (stability), under the GATE label. A waveform
+  //     with a source at last.
+  //   Neither bound: a flat line and the words NO FEED, drawn once
+  //   per service. The strip never invents a waveform.
+  // ================================================================
+  var CH5 = [36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 157, 161, 165];
+  function pingBound() {
+    return PING.series.length >= 3 && PING.lastAt && (Date.now() - PING.lastAt <= 30000);
+  }
+  function pingJitter() {
+    if (PING.series.length < 2) return 0;
+    var sum = 0, n = 0;
+    for (var i = 1; i < PING.series.length; i++) { sum += Math.abs(PING.series[i].rtt - PING.series[i - 1].rtt); n++; }
+    return Math.round(sum / n);
+  }
+  function freqLive() {
+    if (RF.snapAt && (Date.now() - RF.snapAt <= SNAP_FRESH_MS)) return true;
+    return pingBound();
+  }
+  function drawGateWave(base, top) {
+    // The ping series as a waveform: x = answer time across the
+    // series' own span (min 20 s), y = RTT, 0 at the baseline,
+    // scaled to the series' own max (floor 100 ms). Only real
+    // answers are plotted; gaps stay gaps (the line breaks).
+    var ser = PING.series, now = Date.now();
+    var span = Math.max(20000, now - ser[0].at);
+    var maxR = 100;
+    for (var i = 0; i < ser.length; i++) if (ser[i].rtt > maxR) maxR = ser[i].rtt;
+    maxR *= 1.2;
+    fctx.lineJoin = 'round'; fctx.lineCap = 'round';
+    fctx.beginPath();
+    var pen = false;
+    for (var j = 0; j < ser.length; j++) {
+      var x = FW - ((now - ser[j].at) / span) * FW;
+      if (x < 0) { pen = false; continue; }
+      var y = base - (ser[j].rtt / maxR) * (base - top);
+      if (!pen) { fctx.moveTo(x, y); pen = true; } else fctx.lineTo(x, y);
+    }
+    fctx.strokeStyle = 'rgba(57,255,106,.85)';
+    fctx.lineWidth = Math.max(1.5, Math.floor(FH * 0.05)); fctx.stroke();
+    // the indication, printed: what this waveform tells
+    fctx.fillStyle = 'rgba(182,255,208,.9)';
+    fctx.font = '700 ' + Math.max(8, Math.floor(FH * 0.30)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    fctx.textAlign = 'right'; fctx.textBaseline = 'top';
+    fctx.fillText('AP ' + PING.lastRtt + 'MS · JIT ±' + pingJitter() + 'MS', FW * 0.988, FH * 0.06);
+    fctx.fillStyle = 'rgba(143,217,164,.6)';
+    fctx.font = '700 ' + Math.max(7, Math.floor(FH * 0.22)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    fctx.textAlign = 'left'; fctx.textBaseline = 'bottom';
+    fctx.fillText('PING RTT · STABILITY', FW * 0.012, FH * 0.995);
+  }
+  function drawFreq(now) {
+    if (!built || !FW) { RUN.freq = false; return; }
+    if (document.hidden) { RUN.freq = false; return; } // stops in the dark (LOKMAT STANDARD)
+    if (CENSUS.on) { requestAnimationFrame(drawFreq); return; } // census owns the glass
+    fctx.clearRect(0, 0, FW, FH);
+    var base = FH * 0.88, top = FH * 0.16;
+    fctx.lineWidth = 1;
+    fctx.strokeStyle = 'rgba(57,255,106,.14)';
+    fctx.beginPath(); fctx.moveTo(0, base); fctx.lineTo(FW, base); fctx.stroke();
+    fctx.beginPath(); fctx.moveTo(0, top); fctx.lineTo(FW, top); fctx.stroke();
+    var age = Date.now() - RF.snapAt;
+    var rfFresh = !!RF.snapAt && age <= SNAP_FRESH_MS;
+    // strip label, left edge, bios style — the label names the mode
+    fctx.fillStyle = 'rgba(143,217,164,.85)';
+    fctx.font = '700 ' + Math.max(8, Math.floor(FH * 0.30)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    fctx.textAlign = 'left'; fctx.textBaseline = 'top';
+    fctx.fillText(rfFresh ? 'FREQ' : (pingBound() ? 'GATE' : 'FREQ'), FW * 0.012, FH * 0.06);
+    fctx.textAlign = 'right';
+    if (!rfFresh) {
+      if (pingBound()) {
+        drawGateWave(base, top);
+      } else {
+        fctx.fillStyle = 'rgba(255,201,92,.85)';
+        fctx.fillText('NO FEED', FW * 0.988, FH * 0.06);
+        fctx.beginPath(); fctx.moveTo(0, base); fctx.lineTo(FW, base);
+        fctx.strokeStyle = 'rgba(57,255,106,.30)'; fctx.stroke();
+      }
+      if (freqLive()) requestAnimationFrame(drawFreq); else RUN.freq = false;
+      return;
+    }
+    fctx.fillStyle = 'rgba(143,217,164,.7)';
+    fctx.fillText('SCAN ' + Math.floor(age / 1000) + 'S', FW * 0.988, FH * 0.06);
+    // strongest normalized energy per channel
+    var e24 = {}, e5 = {}, connCh = 0, connBand = 0;
+    for (var i = 0; i < RF.aps.length; i++) {
+      var ap = RF.aps[i], n = clamp((ap.rssi + 92) / 58, 0.05, 1);
+      if (ap.bandGhz >= 4.5 && ap.bandGhz < 5.5) { if (!e5[ap.channel] || n > e5[ap.channel]) e5[ap.channel] = n; }
+      else if (ap.bandGhz > 0 && ap.bandGhz < 4.5) { if (!e24[ap.channel] || n > e24[ap.channel]) e24[ap.channel] = n; }
+      if (ap.bssid && ap.bssid === RF.connBssid) { connCh = ap.channel; connBand = ap.bandGhz; }
+    }
+    var slot24 = (FW * 0.46) / 13, slot5 = (FW * 0.44) / CH5.length;
+    var ci, cx2, hh;
+    for (ci = 1; ci <= 13; ci++) {
+      if (!e24[ci]) continue;
+      cx2 = FW * 0.03 + (ci - 0.5) * slot24; hh = e24[ci] * (base - top);
+      fctx.fillStyle = (connBand > 0 && connBand < 4.5 && connCh === ci) ? '#eaffef' : 'rgba(57,255,106,.75)';
+      fctx.fillRect(cx2 - slot24 * 0.32, base - hh, slot24 * 0.64, hh);
+    }
+    for (var j = 0; j < CH5.length; j++) {
+      if (!e5[CH5[j]]) continue;
+      cx2 = FW * 0.54 + (j + 0.5) * slot5; hh = e5[CH5[j]] * (base - top);
+      fctx.fillStyle = (connBand >= 4.5 && connBand < 5.5 && connCh === CH5[j]) ? '#eaffef' : 'rgba(57,255,106,.75)';
+      fctx.fillRect(cx2 - slot5 * 0.32, base - hh, slot5 * 0.64, hh);
+    }
+    // group divider + axis labels
+    fctx.fillStyle = 'rgba(57,255,106,.35)';
+    fctx.fillRect(FW * 0.515, top, 1, base - top);
+    fctx.fillStyle = 'rgba(143,217,164,.6)';
+    fctx.font = '700 ' + Math.max(7, Math.floor(FH * 0.22)) + 'px ui-monospace,Menlo,Consolas,monospace';
+    fctx.textAlign = 'left'; fctx.textBaseline = 'bottom';
+    fctx.fillText('2.4', FW * 0.03, FH * 0.995);
+    fctx.fillText('5', FW * 0.545, FH * 0.995);
+    if (freqLive()) requestAnimationFrame(drawFreq); else RUN.freq = false;
+  }
+  // ================================================================
+  // INGEST — every readout binds to the best REAL source reachable
+  // from the face's environments, attempted in a fixed preference
+  // order, each degrading honestly to NO MEASURE / NO FEED.
+  //
+  // BIO SENSORS (the registered watch's VC30F PPG + G-sensor class):
+  //   (a) Generic Sensor API — forward hook only (no HR sensor type
+  //       exists in the spec today).
+  //   (b) Web Bluetooth Heart Rate Service — behind a TAP on the HEART
+  //       RATE row (a face cannot pair silently). Reaches an EXTERNAL
+  //       BLE HR device, not the watch's own PPG.
+  //   (c) CONTAINER BRIDGE — window.ApexSensors (the estate's native
+  //       container). The watch's OWN readings arrive here.
+  // NETWORK: window.ApexNet (container; the OS knows the real radio)
+  //   -> navigator.connection (web subset: .type is transport where
+  //   the platform exposes it; .effectiveType is a BANDWIDTH CLASS and
+  //   is never displayed as a radio generation) -> NO MEASURE.
+  // RF SCANS: window.ApexWifi snapshots (container scan pathway) +
+  //   window.ApexWifiRequestScan() request hook — see the scan
+  //   supervisor. Android gives apps no promiscuous/monitor mode; the
+  //   ordinary scan pathway, retried, is the whole design (spec §6).
+  // FACTORY BEAT: window.ApexBeat (container-relayed house state) or
+  //   a same-origin fetch of factory-beat.json — whichever honestly
+  //   answers; absent both, the ladder falls through AP PING and
+  //   FACTORY to TICK (V6 ladder — see the heartbeat block).
+  //
+  // BRIDGE CONTRACTS (all fields optional; numbers only; anything
+  // absent or non-numeric renders the honest empty state):
+  //   ApexSensors { hr, spo2, hrv, steps, sleep, batt, resp, temp, at, sim }
+  //     resp/temp are CANDIDATE fields — accepted, held, shown nowhere
+  //     until this hardware proves them (V4 rail, unchanged).
+  //   ApexNet     { transport:'wifi'|'cellular'|'ethernet'|'none',
+  //                 ssid, bssid, bandGhz, channel, rssi, gen, at, sim }
+  //     gen is the cellular generation AS REPORTED BY THE OS telephony
+  //     stack ('5G', '4G', ...) — the only honest way it can appear.
+  //   ApexWifi    { at, aps:[{ssid,bssid,bandGhz,channel,rssi}],
+  //                 connectedBssid, sim }
+  //     A wifi snapshot may ALSO carry the census extension fields
+  //     bt / cell / session below; readers ignore what is absent.
+  //   ApexCensus  { at, bt:[{name,addr,rssi}], cell:[{name,rssi}],
+  //                 session:{distMi,durMin}, sim }
+  //     The census picture's other radios + session meta. Any radio
+  //     a payload never supplies reads NO MEASURE in the census —
+  //     never zero, which would claim "none heard".
+  //   ApexBeat    { pulseMs, phaseMs, at, sim }
+  //   ApexPing    { rttMs, at, sim } — the connected AP's ping RTT,
+  //     one payload per answered ping (the ROUTER HEARTBEAT source,
+  //     V6). ApexNet payloads may carry the same reading as pingMs.
+  //   Any payload may carry sim:true (container demo mode) -> the
+  //   face flies the SIM flag while those values are on screen.
+  // Freshness: every field keeps the time its value last CHANGED (or
+  // its payload `at`); a value older than its bound stops displaying
+  // as a reading. Bounds: HR 20s, SpO2 60s, HRV 60s, STEPS 300s,
+  // SLEEP 12h, NET 30s, factory state 90s, scan snapshot 60s (spec).
+  // ================================================================
+  var S = { hr: null, hrSrc: '', hrState: 'TAP', spo2: null, hrv: null,
+            steps: null, sleep: null, gps: null, batt: null,
+            resp: null, temp: null };
+  var T = { hr: 0, spo2: 0, hrv: 0, steps: 0, sleep: 0, batt: 0 };
+  var NET = { transport: '', ssid: '', bssid: '', bandGhz: null, channel: null, rssi: null, gen: '', at: 0, sig: '' };
+  var FB = { pulseMs: 180000, phaseMs: 0, at: 0, freshAt: 0, sig: '' };
+  var BEAT = { src: 'TICK' };
+  var PING = { series: [], lastAt: 0, lastRtt: null };
+  var RUN = { scope: false, pulse: false, freq: false };
+  var SIM = { on: false };
+  var INVEST = { on: false };
+  var battPct = null;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function num(v) { return (typeof v === 'number' && isFinite(v)) ? v : null; }
+  function fresh(t, bound) { return !!t && (Date.now() - t <= bound); }
+  function stamp(key, val, at) {
+    // Stamp when the value CHANGES (or the payload carries a newer
+    // `at`): a set-once bridge polled forever must still age honestly.
+    if (S[key] !== val || (at && at > T[key])) T[key] = at || Date.now();
+  }
+  function applyBridge(b) {
+    if (!b) return;
+    var v, at = (typeof b.at === 'number') ? b.at : 0;
+    if (b.sim) SIM.on = true;
+    if ((v = num(b.hr)) !== null && v > 0) { stamp('hr', v, at); S.hr = v; S.hrSrc = 'BRIDGE'; }
+    if ((v = num(b.spo2)) !== null) { stamp('spo2', v, at); S.spo2 = v; }
+    if ((v = num(b.hrv)) !== null) { stamp('hrv', v, at); S.hrv = v; }
+    if ((v = num(b.steps)) !== null) { stamp('steps', v, at); S.steps = v; }
+    if ((v = num(b.sleep)) !== null) { stamp('sleep', v, at); S.sleep = v; }
+    if ((v = num(b.batt)) !== null) { stamp('batt', v, at); S.batt = v; }
+    if ((v = num(b.resp)) !== null) S.resp = v;   // candidate — held, not shown
+    if ((v = num(b.temp)) !== null) S.temp = v;   // candidate — held, not shown
+    renderBios();
+  }
+  function readBridge() { if (window.ApexSensors) applyBridge(window.ApexSensors); }
+  // Push = the container's current state, REPLACING the standing
+  // object — so the poll path re-reads the pushed state and the two
+  // channels can never fight (last delivery wins, by construction).
+  window.ApexSensorsPush = function (obj) { window.ApexSensors = obj; applyBridge(obj); };
+  // (a) Generic Sensor probe — forward hook, see header note.
+  try {
+    if (typeof window.HeartRateSensor !== 'undefined') {
+      var hs = new window.HeartRateSensor();
+      hs.addEventListener('reading', function () {
+        var v = num(hs.heartRate);
+        if (v !== null && v > 0) { stamp('hr', v, 0); S.hr = v; S.hrSrc = 'SENSOR'; renderBios(); }
+      });
+      hs.start();
+    }
+  } catch (e) { /* not exposed on this platform — fall through to (b)/(c) */ }
+  // (b) Web Bluetooth HR service — the HEART RATE row is the tap target.
+  function connectBT() {
+    if (!navigator.bluetooth) { S.hrState = 'NO BT'; renderBios(); return; }
+    S.hrState = 'CONNECTING'; renderBios();
+    navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] })
+      .then(function (dev) {
+        dev.addEventListener('gattserverdisconnected', function () {
+          if (S.hrSrc === 'BT') { S.hr = null; S.hrSrc = ''; S.hrState = 'TAP'; renderBios(); }
+        });
+        return dev.gatt.connect();
+      })
+      .then(function (srv) { return srv.getPrimaryService('heart_rate'); })
+      .then(function (svc) { return svc.getCharacteristic('heart_rate_measurement'); })
+      .then(function (ch) {
+        return ch.startNotifications().then(function () {
+          ch.addEventListener('characteristicvaluechanged', function (ev) {
+            var val = ev.target.value, flags = val.getUint8(0);
+            var hr = (flags & 1) ? val.getUint16(1, true) : val.getUint8(1);
+            if (hr > 0) { stamp('hr', hr, 0); S.hr = hr; S.hrSrc = 'BT'; S.hrState = ''; renderBios(); }
+          });
+          S.hrState = 'BT'; renderBios();
+        });
+      })
+      .catch(function () { S.hrState = 'TAP'; renderBios(); });
+  }
+  // GPS — explicit tap only, never silent (the privacy posture is the
+  // product). The first tap also starts the frame watch: successive
+  // FIXES anchor the superposition geometry (spec §6). Course over
+  // ground while moving; last course held while still.
+  var gpsWatchId = null;
+  function frameFix(p) {
+    var lat = p.coords.latitude, lon = p.coords.longitude, now = Date.now();
+    if (!FRAME.origin) {
+      FRAME.origin = { lat: lat, lon: lon }; FRAME.x = 0; FRAME.y = 0;
+      FRAME.anchorX = 0; FRAME.anchorY = 0; FRAME.fixes = 1;
+      return;
+    }
+    var nx = (lon - FRAME.origin.lon) * 111320 * Math.cos(FRAME.origin.lat * Math.PI / 180);
+    var ny = (lat - FRAME.origin.lat) * 110540;
+    FRAME.x = nx; FRAME.y = ny; FRAME.fixes++;
+    var dx = nx - FRAME.anchorX, dy = ny - FRAME.anchorY;
+    if (Math.sqrt(dx * dx + dy * dy) >= REANCHOR_M) {
+      // Displacement bound crossed: the new position re-anchors the
+      // frame — the next snapshots ring the APs around HERE.
+      FRAME.anchorX = nx; FRAME.anchorY = ny; FRAME.reanchorAt = now;
+    }
+    if (typeof p.coords.heading === 'number' && p.coords.speed && p.coords.speed > 0.5) {
+      FRAME.courseDeg = p.coords.heading; FRAME.courseAt = now;
+    }
+  }
+  function askGPS() {
+    if (!navigator.geolocation) return;
+    S.gps = '…'; renderBios();
+    navigator.geolocation.getCurrentPosition(function (p) {
+      S.gps = p.coords.latitude.toFixed(4) + '<br>&nbsp;&nbsp;' + p.coords.longitude.toFixed(4);
+      frameFix(p);
+      if (gpsWatchId === null && navigator.geolocation.watchPosition) {
+        gpsWatchId = navigator.geolocation.watchPosition(frameFix, function () { /* frame keeps its last fix; picture ages honestly */ }, { enableHighAccuracy: true, timeout: 15000 });
+      }
+      renderBios();
+    }, function () { S.gps = null; renderBios(); },
+      { enableHighAccuracy: true, timeout: 10000 });
+  }
+  // Compass fusion — ONLY where the platform volunteers a heading
+  // (container-set window.__apexHeadingDeg, or absolute orientation
+  // events). Never requested, never invented: on sensor-poor hardware
+  // (no magnetometer) nothing arrives here and the GPS frame rules.
+  try {
+    window.addEventListener('deviceorientationabsolute', function (e) {
+      if (e && typeof e.alpha === 'number') { FRAME.headingDeg = (360 - e.alpha) % 360; FRAME.headingAt = Date.now(); }
+    });
+    window.addEventListener('deviceorientation', function (e) {
+      if (e && typeof e.webkitCompassHeading === 'number') { FRAME.headingDeg = e.webkitCompassHeading; FRAME.headingAt = Date.now(); }
+    });
+  } catch (e) { /* no orientation events — GPS frame only */ }
+  // ---- NETWORK ingest: container bridge -> web subset -> NO MEASURE.
+  // THE 5G TRAP, named so it never comes back: a Wi-Fi BAND (2.4/5/6
+  // GHz) is a frequency, not a cellular generation. This face prints a
+  // generation ONLY from NET.gen — the OS telephony stack's own report
+  // via the container. navigator.connection.effectiveType is a
+  // bandwidth class and is deliberately never read here.
+  function applyNet(n) {
+    if (!n) return;
+    var sig = [n.transport, n.ssid, n.bssid, n.bandGhz, n.channel, n.rssi, n.gen, n.pingMs].join('|');
+    if (sig === NET.sig && typeof n.at !== 'number') return; // set-once payload: let it age
+    NET.sig = sig;
+    NET.transport = n.transport || ''; NET.ssid = n.ssid || ''; NET.bssid = n.bssid || '';
+    NET.bandGhz = num(n.bandGhz); NET.channel = num(n.channel); NET.rssi = num(n.rssi); NET.gen = n.gen || '';
+    NET.at = (typeof n.at === 'number') ? n.at : Date.now();
+    if (n.sim) SIM.on = true;
+    if (num(n.pingMs) !== null) applyPing({ rttMs: n.pingMs, at: NET.at, sim: n.sim });
+    if (typeof n.headingDeg === 'number') { FRAME.headingDeg = n.headingDeg; FRAME.headingAt = Date.now(); }
+    renderBios();
+  }
+  function readNet() { if (window.ApexNet) applyNet(window.ApexNet); }
+  window.ApexNetPush = function (n) { window.ApexNet = n; applyNet(n); };
+  function netText() {
+    if (fresh(NET.at, 30000) && NET.transport) {
+      if (NET.transport === 'wifi') {
+        var s = 'WIFI';
+        s += NET.ssid ? ' · ' + NET.ssid : ' · AP NO MEASURE';
+        if (NET.bandGhz) s += ' · ' + NET.bandGhz + 'GHZ';
+        if (NET.channel) s += ' CH' + NET.channel;
+        if (NET.rssi !== null) s += ' ' + NET.rssi + 'DB';
+        return s;
+      }
+      if (NET.transport === 'cellular') return 'CELL' + (NET.gen ? ' · ' + NET.gen + ' (OS)' : ' · GEN NO MEASURE');
+      if (NET.transport === 'ethernet') return 'ETHERNET';
+      if (NET.transport === 'none') return 'NO CARRIER';
+      return String(NET.transport).toUpperCase();
+    }
+    var c = navigator.connection;
+    if (c && c.type) {
+      if (c.type === 'wifi') return 'WIFI · AP NO MEASURE';
+      if (c.type === 'cellular') return 'CELL · GEN NO MEASURE';
+      if (c.type === 'none') return 'NO CARRIER';
+      if (c.type === 'ethernet') return 'ETHERNET';
+      return String(c.type).toUpperCase();
+    }
+    if (navigator.onLine === false) return 'OFFLINE';
+    return 'NO MEASURE';
+  }
+  // ---- RF scan ingest (container snapshots; poll + push).
+  function readWifi() {
+    var w = window.ApexWifi;
+    if (w && typeof w.at === 'number' && w.at !== RF.snapAt) ingestWifi(w);
+  }
+  window.ApexWifiPush = function (snap) {
+    if (snap && typeof snap.at !== 'number') snap.at = Date.now();
+    window.ApexWifi = snap;
+    ingestWifi(snap);
+  };
+  // ---- AP PING ingest (V6): the router heartbeat's raw series.
+  // One entry per ANSWERED ping; an unanswered ping leaves no entry
+  // (the gap in the series is the truth). Entries carry both the
+  // wall stamp (freshness, jitter) and a performance stamp (the
+  // pulse strip's scroll clock). Capped at 64 answers.
+  function applyPing(p) {
+    if (!p) return;
+    var rtt = num(p.rttMs);
+    if (rtt === null || rtt < 0) return;
+    var at = (typeof p.at === 'number') ? p.at : Date.now();
+    if (at <= PING.lastAt) return; // set-once payloads must not mint answers
+    PING.lastAt = at; PING.lastRtt = Math.round(rtt);
+    PING.series.push({ at: at, pw: performance.now(), rtt: Math.round(rtt) });
+    if (PING.series.length > 64) PING.series.shift();
+    if (p.sim) SIM.on = true;
+  }
+  function readPing() { if (window.ApexPing) applyPing(window.ApexPing); }
+  window.ApexPingPush = function (p) { window.ApexPing = p; applyPing(p); };
+
+  // ================================================================
+  // EMITTER CENSUS — the Wardrive picture, in the watch (owner's
+  // reiteration order, Nov 13, 2026: on a Friday night he had to
+  // open Wardrive Go because his own face did not give him the
+  // census of his subdivision). A CENSUS, not a hunt: session
+  // totals by radio, every emitter heard ordered by strength, a
+  // NOTABLE section, and a FIRST-APPEARANCE LOG — emitters heard
+  // this session for the first time ever, date-stamped. That log
+  // is the design's proof of purpose: the day fiber was installed
+  // at the neighbor's house, a new gateway SSID (DasherJay) would
+  // have stood in it with the date beside it.
+  // DATA: the same container-bridge snapshots the scope eats
+  // (ApexWifi), optionally extended with bt[] / cell[] / session{}
+  // (see BRIDGE CONTRACTS), or a standalone ApexCensus payload.
+  // A radio the bridge never reports reads NO MEASURE in the
+  // totals — never zero, which would claim "none heard". The
+  // census keeps the LAST snapshot and prints its age; past the
+  // freshness bound it is labelled STALE, never dressed as live.
+  // FIRST-APPEARANCE MEMORY lives in localStorage (the seen-store)
+  // and is written by every snapshot whether or not the census is
+  // open; where storage is unavailable the census still renders,
+  // with first-appearance scoped to what this page has heard.
+  // NOTABLE rules (printed on the panel): UNNAMED emitters · names
+  // carrying watch words · names with a repeated word · FIRST SEEN
+  // this session as a DUAL-BAND gateway (the same SSID heard on
+  // both bands = new infrastructure, the DasherJay shape) · FIRST
+  // SEEN this session at near strength. Ordering: suspicious names
+  // first, then new infrastructure and nameless Wi-Fi, then the
+  // rest of the new-and-near — a merely-new strong neighbour never
+  // buries an odd name or a new gateway down the list. And the
+  // standing rule, printed on the panel: RSSI IS SIGNAL STRENGTH,
+  // NOT DISTANCE — no emitter in this view is ever ranged.
+  // ================================================================
+  var CENSUS = { on: false, bt: null, cell: null, session: null, at: 0, sig: '' };
+  var CENSUS_SEEN_KEY = 'apex.census.seen.v1';
+  var CENSUS_WATCH = /cam|drone|spy|track|record|hidden|listen/i;
+  var seenStore = null;
+  function seenLoad() {
+    if (seenStore) return seenStore;
+    seenStore = {};
+    try {
+      var raw = window.localStorage.getItem(CENSUS_SEEN_KEY);
+      if (raw) { var p = JSON.parse(raw); if (p && typeof p === 'object') seenStore = p; }
+    } catch (e) { /* storage unavailable — session-scoped memory only */ }
+    return seenStore;
+  }
+  function seenSave() {
+    try { window.localStorage.setItem(CENSUS_SEEN_KEY, JSON.stringify(seenStore)); } catch (e) { /* held in memory */ }
+  }
+  function dayStr(ms) {
+    var d = new Date(ms);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  function emitKey(radio, e) {
+    return radio + '|' + (e.bssid || e.addr || e.name || e.ssid || '');
+  }
+  function seenStamp(radio, e, at) {
+    var store = seenLoad(), key = emitKey(radio, e);
+    if (!key || key === radio + '|') return;
+    if (!store[key]) { store[key] = dayStr(at || Date.now()); seenSave(); }
+  }
+  function censusIngest(snap) {
+    if (!snap) return;
+    var at = (typeof snap.at === 'number') ? snap.at : Date.now();
+    var aps = snap.aps || [];
+    for (var i = 0; i < aps.length; i++) seenStamp('wifi', aps[i], at);
+    if (snap.bt || snap.cell || snap.session) {
+      if (snap.bt) { CENSUS.bt = snap.bt; for (var j = 0; j < snap.bt.length; j++) seenStamp('bt', snap.bt[j], at); }
+      if (snap.cell) { CENSUS.cell = snap.cell; for (var k = 0; k < snap.cell.length; k++) seenStamp('cell', snap.cell[k], at); }
+      if (snap.session) CENSUS.session = snap.session;
+      CENSUS.at = at;
+    }
+    CENSUS.sig = '';
+  }
+  window.ApexCensusPush = function (c) {
+    if (!c) return;
+    if (typeof c.at !== 'number') c.at = Date.now();
+    if (c.sim) SIM.on = true;
+    censusIngest({ at: c.at, bt: c.bt, cell: c.cell, session: c.session });
+    if (CENSUS.on) renderCensus();
+  };
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function oddName(name) {
+    var toks = name.toLowerCase().split(/[^a-z0-9]+/), seen = {};
+    for (var i = 0; i < toks.length; i++) {
+      if (toks[i].length < 3) continue;
+      if (seen[toks[i]]) return true;
+      seen[toks[i]] = 1;
+    }
+    return false;
+  }
+  function censusData() {
+    var store = seenLoad();
+    var snapAt = Math.max(RF.snapAt || 0, CENSUS.at || 0);
+    var snapDay = snapAt ? dayStr(snapAt) : '';
+    function mk(radio, e) {
+      var name = radio === 'wifi' ? (e.ssid || '') : (e.name || '');
+      var tag = 'CELL';
+      if (radio === 'wifi') {
+        tag = 'WIFI ' + (e.bandGhz >= 5.5 ? '6G' : (e.bandGhz >= 4.5 ? '5G' : (e.bandGhz > 0 ? '2.4G' : '--'))) + (e.channel ? ' CH' + e.channel : '');
+      } else if (radio === 'bt') tag = 'BT';
+      var first = store[emitKey(radio, e)] || '';
+      var isNew = !!snapDay && first === snapDay;
+      var reasons = [];
+      if (!name) reasons.push('UNNAMED');
+      else {
+        if (CENSUS_WATCH.test(name)) reasons.push('WATCH WORD');
+        if (oddName(name)) reasons.push('ODD NAME');
+      }
+      var rssi = num(e.rssi);
+      if (isNew && rssi !== null && rssi >= -85) reasons.push('FIRST SEEN · NEAR');
+      return {
+        name: name, radio: radio, tag: tag, rssi: rssi, isNew: isNew, first: first,
+        reasons: reasons, conn: radio === 'wifi' && !!e.bssid && e.bssid === RF.connBssid
+      };
+    }
+    var rows = [], i;
+    var aps = RF.aps || [];
+    for (i = 0; i < aps.length; i++) rows.push(mk('wifi', aps[i]));
+    // Dual-band pass: a NEW wifi SSID heard in two band classes is
+    // new infrastructure (a gateway), not single-radio chatter.
+    var bandOf = {};
+    for (i = 0; i < rows.length; i++) {
+      var rw = rows[i];
+      if (rw.radio !== 'wifi' || !rw.name) continue;
+      var bc = rw.tag.indexOf('5G') >= 0 || rw.tag.indexOf('6G') >= 0 ? 'hi' : 'lo';
+      (bandOf[rw.name] = bandOf[rw.name] || {})[bc] = 1;
+    }
+    for (i = 0; i < rows.length; i++) {
+      var rd = rows[i];
+      if (rd.radio === 'wifi' && rd.isNew && rd.name && bandOf[rd.name] && bandOf[rd.name].hi && bandOf[rd.name].lo) {
+        rd.reasons.unshift('FIRST SEEN · DUAL-BAND'); // class-defining reason leads the row
+      }
+    }
+    if (CENSUS.bt) for (i = 0; i < CENSUS.bt.length; i++) rows.push(mk('bt', CENSUS.bt[i]));
+    if (CENSUS.cell) for (i = 0; i < CENSUS.cell.length; i++) rows.push(mk('cell', CENSUS.cell[i]));
+    rows.sort(function (a, b) { return (b.rssi === null ? -999 : b.rssi) - (a.rssi === null ? -999 : a.rssi); });
+    var wifiNew = 0, btNew = 0, cellNew = 0;
+    for (i = 0; i < rows.length; i++) {
+      if (!rows[i].isNew) continue;
+      if (rows[i].radio === 'wifi') wifiNew++; else if (rows[i].radio === 'bt') btNew++; else cellNew++;
+    }
+    // NOTABLE ordering, three classes (rows arrive RSSI-sorted; the
+    // partition is stable, so strength rules inside each class):
+    //   A — the name itself is the anomaly (WATCH WORD · ODD NAME)
+    //   B — new infrastructure (FIRST SEEN · DUAL-BAND) and
+    //       nameless Wi-Fi
+    //   C — nameless BT/cell and the merely new-and-near
+    function notClass(r) {
+      if (r.reasons.indexOf('WATCH WORD') >= 0 || r.reasons.indexOf('ODD NAME') >= 0) return 0;
+      if (r.reasons.indexOf('FIRST SEEN · DUAL-BAND') >= 0) return 1;
+      if (r.reasons.indexOf('UNNAMED') >= 0 && r.radio === 'wifi') return 1;
+      return 2;
+    }
+    var nA = [], nB = [], nC = [];
+    for (i = 0; i < rows.length; i++) {
+      if (!rows[i].reasons.length) continue;
+      var nc = notClass(rows[i]);
+      if (nc === 0) nA.push(rows[i]); else if (nc === 1) nB.push(rows[i]); else nC.push(rows[i]);
+    }
+    return {
+      snapAt: snapAt, snapDay: snapDay, rows: rows,
+      notable: nA.concat(nB, nC),
+      firstLog: rows.filter(function (r) { return r.isNew; }),
+      wifiTotal: aps.length, wifiNew: wifiNew,
+      btTotal: CENSUS.bt ? CENSUS.bt.length : null, btNew: btNew,
+      cellTotal: CENSUS.cell ? CENSUS.cell.length : null, cellNew: cellNew,
+      session: CENSUS.session
+    };
+  }
+  function cenRow(r, withWhy) {
+    var nm = r.name ? esc(r.name) : '(UNNAMED)';
+    var why = (withWhy && r.reasons.length) ? ' <span class="cen-why">' + esc(r.reasons.join(' · ')) + '</span>' : '';
+    var pipe = r.conn ? ' <span class="cen-pipe">PIPE</span>' : '';
+    var nw = (!withWhy && r.isNew) ? ' <span class="cen-why">NEW</span>' : '';
+    return '<div class="cen-row"><span class="cen-nm">' + nm + ' <span class="cen-tag">' + r.tag + '</span>' + why + nw + pipe +
+      '</span><span class="cen-rs">' + (r.rssi === null ? 'NO MEASURE' : r.rssi + ' DB') + '</span></div>';
+  }
+  function renderCensus() {
+    var el = document.getElementById('census');
+    var d = censusData();
+    if (!d.snapAt) {
+      el.innerHTML = '<div class="cen-h">EMITTER CENSUS</div>' +
+        '<div class="cen-none">NO MEASURE — NO SCAN SNAPSHOT HAS ARRIVED.<br>' +
+        'WHEN THE CONTAINER BRIDGE DELIVERS A SCAN, THE CENSUS FILLS FROM IT.<br>NOTHING HERE IS SIMULATED.</div>' +
+        '<div class="cen-rule">RSSI IS SIGNAL STRENGTH, NOT DISTANCE</div>';
+      return;
+    }
+    var ageS = Math.floor((Date.now() - d.snapAt) / 1000);
+    var ageTxt = ageS < 60 ? ageS + 'S OLD' : Math.floor(ageS / 60) + 'M OLD';
+    var stale = (Date.now() - d.snapAt) > SNAP_FRESH_MS;
+    var when = new Date(d.snapAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+    var html = '<div class="cen-h">EMITTER CENSUS</div>';
+    html += '<div class="cen-sub">' + when + ' · SNAPSHOT ' + ageTxt + (stale ? ' · <span class="cen-sim">STALE</span>' : '') +
+      (SIM.on ? '<br><span class="cen-sim">SIM — DECLARED DEMO DATA, NOT A LIVE SCAN</span>' : '<br>LIVE SCAN SNAPSHOT') + '</div>';
+    var ses = d.session || {};
+    var sesTxt = (typeof ses.distMi === 'number' || typeof ses.durMin === 'number')
+      ? '<span class="dim">SESSION</span> ' + (typeof ses.distMi === 'number' ? ses.distMi.toFixed(1) + ' MI' : '—') + (typeof ses.durMin === 'number' ? ' · ' + Math.round(ses.durMin) + ' MIN' : '')
+      : '<span class="dim">SESSION</span> NO MEASURE';
+    html += '<div class="cen-tot">WIFI NEW ' + d.wifiNew + ' · TOTAL ' + d.wifiTotal + '<br>' +
+      'BT ' + (d.btTotal === null ? 'NO MEASURE' : d.btTotal + (d.btNew ? ' (' + d.btNew + ' NEW)' : '')) +
+      ' · CELL ' + (d.cellTotal === null ? 'NO MEASURE' : d.cellTotal + (d.cellNew ? ' (' + d.cellNew + ' NEW)' : '')) + '<br>' + sesTxt + '</div>';
+    html += '<div class="cen-rule">RSSI IS SIGNAL STRENGTH, NOT DISTANCE</div>';
+    html += '<div class="cen-sec">NOTABLE (' + d.notable.length + ') — UNNAMED · WATCH WORDS · ODD NAMES · FIRST SEEN · DUAL-BAND NEW</div>';
+    if (!d.notable.length) html += '<div class="cen-more">NONE THIS SESSION</div>';
+    for (var i = 0; i < Math.min(16, d.notable.length); i++) html += cenRow(d.notable[i], true);
+    if (d.notable.length > 16) html += '<div class="cen-more">+ ' + (d.notable.length - 16) + ' MORE NOTABLE</div>';
+    html += '<div class="cen-sec">STRONGEST EMITTERS (' + d.rows.length + ')</div>';
+    for (var j = 0; j < Math.min(40, d.rows.length); j++) html += cenRow(d.rows[j], false);
+    if (d.rows.length > 40) html += '<div class="cen-more">+ ' + (d.rows.length - 40) + ' MORE, WEAKER</div>';
+    html += '<div class="cen-sec">FIRST APPEARANCE LOG — ' + d.snapDay + ' (' + d.firstLog.length + ' NEW)</div>';
+    if (!d.firstLog.length) html += '<div class="cen-more">NO FIRST APPEARANCES THIS SESSION — EVERY EMITTER WAS IN THE SEEN-STORE</div>';
+    for (var k = 0; k < Math.min(12, d.firstLog.length); k++) html += cenRow(d.firstLog[k], false);
+    if (d.firstLog.length > 12) html += '<div class="cen-more">+ ' + (d.firstLog.length - 12) + ' MORE FIRST SEEN ' + d.snapDay + '</div>';
+    el.innerHTML = html;
+  }
+  function censusTick() {
+    if (!CENSUS.on) return;
+    var snapAt = Math.max(RF.snapAt || 0, CENSUS.at || 0);
+    var sig = snapAt + '|' + Math.floor((Date.now() - snapAt) / 5000) + '|' + SIM.on;
+    if (sig !== CENSUS.sig) { CENSUS.sig = sig; renderCensus(); }
+  }
+  function setCensus(on) {
+    CENSUS.on = on;
+    document.getElementById('census').style.display = on ? 'block' : 'none';
+    var b = document.getElementById('cenbtn');
+    b.className = on ? 'on' : '';
+    b.textContent = on ? 'SCOPE' : 'CENSUS';
+    var vis = on ? 'hidden' : 'visible';
+    cv.style.visibility = vis; pv.style.visibility = vis; fv.style.visibility = vis; fxv.style.visibility = vis;
+    if (on) { CENSUS.sig = ''; renderCensus(); }
+  }
+  document.getElementById('cenbtn').addEventListener('click', function () { setCensus(!CENSUS.on); });
+  // ---- FACTORY BEAT ingest (bridge relay, or the house state the
+  // network serves at factory-beat.json next to the face).
+  function applyBeat(b) {
+    if (!b) return;
+    var pulse = num(b.pulseMs), phase = num(b.phaseMs);
+    if (pulse === null || phase === null) return;
+    var sig = pulse + '|' + phase + '|' + (b.at || '');
+    if (sig === FB.sig && typeof b.at !== 'number') return;
+    FB.sig = sig; FB.pulseMs = pulse; FB.phaseMs = phase;
+    FB.at = (typeof b.at === 'number') ? b.at : Date.now();
+    FB.freshAt = Date.now();
+    if (b.sim) SIM.on = true;
+  }
+  function readBeat() { if (window.ApexBeat) applyBeat(window.ApexBeat); }
+  window.ApexBeatPush = function (b) { window.ApexBeat = b; applyBeat(b); };
+  var FF = { fails: 0, nextAt: 0 };
+  function fetchFactory() {
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    if (document.hidden) return; // no fetching in the dark (LOKMAT STANDARD)
+    var now = Date.now();
+    if (now < FF.nextAt) return; // backoff gate — the service calls us every second, we decide
+    try {
+      fetch('factory-beat.json', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (j) { applyBeat(j); FF.fails = 0; FF.nextAt = Date.now() + 30000; }
+          else { FF.fails++; FF.nextAt = Date.now() + Math.min(300000, 30000 * Math.pow(2, Math.min(FF.fails, 4))); }
+        })
+        .catch(function () { FF.fails++; FF.nextAt = Date.now() + Math.min(300000, 30000 * Math.pow(2, Math.min(FF.fails, 4))); /* nothing served here — the ladder falls through */ });
+    } catch (e) { FF.nextAt = Date.now() + 300000; /* fetch unavailable in this container */ }
+  }
+  function factoryPhase01() {
+    if (!FB.at) return 0;
+    var ph = FB.phaseMs + (Date.now() - FB.at);
+    var m = ph % FB.pulseMs;
+    return (m < 0 ? m + FB.pulseMs : m) / FB.pulseMs;
+  }
+  // THE LADDER (V6): BIO -> AP PING -> FACTORY -> TICK, re-evaluated
+  // at every service; steps down as sources fall, back up as they
+  // return. AP PING binds when the AP has answered at least 3 pings
+  // and the last answer is under 15 s old.
+  function evalBeat() {
+    if (S.hr !== null && fresh(T.hr, 20000)) BEAT.src = 'BIO';
+    else if (PING.series.length >= 3 && PING.lastAt && (Date.now() - PING.lastAt <= 15000)) BEAT.src = 'APING';
+    else if (FB.freshAt && (Date.now() - FB.freshAt < 90000) && navigator.onLine !== false) BEAT.src = 'FACTORY';
+    else BEAT.src = 'TICK';
+  }
+  // ================================================================
+  // SCAN SUPERVISOR — the battery governor + the promiscuous event
+  // (amendments #3/#5, spec §4/§6). SAMPLED by default: one snapshot
+  // per cadence, the dial replays it between samples with its age
+  // printed. INVESTIGATION (toggle): the call-retry event at full
+  // persistence. Chain shape, both modes: attempt -> result or ~4 s
+  // window -> retry; expect success in 1–3 attempts with throttling
+  // off; MAX 4 attempts, then the snapshot is declared MISSED, the
+  // chain backs off, and the picture ages — it never spins forever.
+  // While the face is unobserved the supervisor sleeps (V12 law).
+  // ================================================================
+  var SCAN = { attempts: 0, missed: 0, nextReqAt: Date.now() + 1000, awaitingSince: 0, snapSeenAt: 0 };
+  function cadenceMs() {
+    var o = window.__apexCadence || {}; // bench hook: shortens cadences for proof runs only
+    return INVEST.on ? (o.invest || 6000) : (o.sample || 30000);
+  }
+  function tickScan() {
+    var now = Date.now();
+    if (document.hidden) return;
+    if (RF.snapAt && RF.snapAt !== SCAN.snapSeenAt) {
+      SCAN.snapSeenAt = RF.snapAt; SCAN.attempts = 0; SCAN.missed = 0; SCAN.awaitingSince = 0;
+      SCAN.nextReqAt = now + cadenceMs();
+      return;
+    }
+    var age = RF.snapAt ? now - RF.snapAt : Infinity;
+    if (age < cadenceMs()) return; // still inside the replay window
+    if (SCAN.awaitingSince && now - SCAN.awaitingSince < 4000) return; // the ~4s result window
+    if (!SCAN.awaitingSince && now < SCAN.nextReqAt) return; // backoff / first-call gate
+    if (SCAN.attempts >= 4) {
+      SCAN.missed++; SCAN.attempts = 0; SCAN.awaitingSince = 0;
+      var back = Math.min(60000, 15000 * SCAN.missed);
+      SCAN.nextReqAt = now + back;
+      if (window.console) console.log('[APEX-RF] snapshot missed after cap; picture ages; backoff ' + back + 'ms');
+      renderBios();
+      return;
+    }
+    SCAN.attempts++; SCAN.awaitingSince = now;
+    if (window.console) console.log('[APEX-RF] scan attempt ' + SCAN.attempts + ' (' + (INVEST.on ? 'investigate' : 'sampled') + ')');
+    if (typeof window.ApexWifiRequestScan === 'function') { try { window.ApexWifiRequestScan(); } catch (e) {} }
+  }
+  function setInvest(on) {
+    INVEST.on = on;
+    var b = document.getElementById('invbtn');
+    b.className = on ? 'on' : '';
+    b.textContent = on ? 'INVESTIGATING' : 'INVESTIGATE';
+    SCAN.attempts = 0; SCAN.awaitingSince = 0; SCAN.nextReqAt = 0;
+    if (!on && navigator.vibrate) { try { navigator.vibrate(0); } catch (e) {} }
+    renderMode(); renderBios();
+  }
+  document.getElementById('invbtn').addEventListener('click', function () { setInvest(!INVEST.on); });
+  // Pin tap = hunt selection (Level 1 -> Level 2). Tap empty glass to clear.
+  cv.addEventListener('click', function (e) {
+    var rect = cv.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (cv.width / rect.width);
+    var y = (e.clientY - rect.top) * (cv.height / rect.height);
+    var bestK = null, bestD = Math.max(20, R * 0.11);
+    for (var k in RF.pins) {
+      var p = RF.pins[k];
+      if (p._px < 0) continue;
+      var dx = p._px - x, dy = p._py - y, dd = Math.sqrt(dx * dx + dy * dy);
+      if (dd < bestD) { bestD = dd; bestK = k; }
+    }
+    HUNT.bssid = (bestK && HUNT.bssid !== bestK) ? bestK : null;
+    if (navigator.vibrate && HUNT.bssid) { try { navigator.vibrate(0); } catch (e) {} }
+    renderBios();
+  });
+  // LEVEL 2 HAPTICS — hotter/colder from the selected AP's MEASURED
+  // RSSI (+ alignment against the frame heading only when a solved
+  // pin and an honest heading both exist). navigator.vibrate is the
+  // web-exposed path; a container that exposes none gets silence here
+  // and a NO MEASURE line in the build report — never a fake buzz
+  // driven by invented data.
+  function huntTick() {
+    if (!HUNT.bssid || !INVEST.on || document.hidden) { HUNT.score = 0; return; }
+    var pin = RF.pins[HUNT.bssid];
+    if (!pin || (Date.now() - RF.snapAt > SNAP_FRESH_MS)) { HUNT.score = 0; return; }
+    var norm = clamp((pin.rssi + 92) / 58, 0, 1);
+    var score = norm, hd = frameHeadingRad();
+    if (hd !== null && pin.solved) {
+      var align = 0.5 + 0.5 * Math.cos(pinPos(pin).ang - hd);
+      score = norm * (0.45 + 0.55 * align);
+    }
+    HUNT.score = score;
+    var pat = 0;
+    if (score > 0.78) pat = [110]; else if (score > 0.60) pat = [70, 50, 70];
+    else if (score > 0.42) pat = [45, 70, 45]; else if (score > 0.26) pat = [28];
+    else if (score > 0.12) pat = [14];
+    if (navigator.vibrate) { try { navigator.vibrate(pat); } catch (e) {} }
+  }
+  // ---- WEATHER — the estate's sibling pattern (weather.html): one
+  // small Open-Meteo fetch on load, refresh 15 min, plain text; the
+  // honest NO MEASURE when the network does not answer.
+  var WX_CODES = { 0: 'CLEAR', 1: 'MOSTLY CLEAR', 2: 'PARTLY CLOUDY', 3: 'OVERCAST', 45: 'FOG', 48: 'FOG', 51: 'DRIZZLE', 53: 'DRIZZLE', 55: 'DRIZZLE', 61: 'RAIN', 63: 'RAIN', 65: 'RAIN', 66: 'FRZ RAIN', 67: 'FRZ RAIN', 71: 'SNOW', 73: 'SNOW', 75: 'SNOW FALL', 77: 'SNOW', 80: 'SHOWERS', 81: 'SHOWERS', 82: 'SHOWERS', 85: 'SNOW SHWR', 86: 'SNOW SHWR', 95: 'T-STORM', 96: 'T-STORM', 99: 'T-STORM' };
+  function fetchWX() {
+    var el = document.getElementById('wx');
+    try {
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=44.98096&longitude=-84.49608&current=temperature_2m,weather_code&temperature_unit=fahrenheit&forecast_days=1')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (j && j.current && typeof j.current.temperature_2m === 'number') el.textContent = Math.round(j.current.temperature_2m) + '°F · ' + (WX_CODES[j.current.weather_code] || '—');
+          else el.textContent = 'WX NO MEASURE';
+        })
+        .catch(function () { el.textContent = 'WX NO MEASURE'; });
+    } catch (e) { el.textContent = 'WX NO MEASURE'; }
+  }
+  function fmtSleep(v) {
+    if (v === null) return 'NO MEASURE';
+    return (Math.round(v * 10) / 10) + 'H';
+  }
+  function rfText() {
+    var age = RF.snapAt ? Math.floor((Date.now() - RF.snapAt) / 1000) : -1;
+    var n24 = 0, n5 = 0, i;
+    for (i = 0; i < RF.aps.length; i++) { if (RF.aps[i].bandGhz >= 4.5) n5++; else n24++; }
+    var hunt = (HUNT.bssid && RF.pins[HUNT.bssid]) ? ' · HUNT ' + (RF.pins[HUNT.bssid].ssid || 'AP') : '';
+    if (INVEST.on) return 'INVESTIGATING · ' + RF.order.length + ' AP · ' + (age >= 0 ? age + 'S' : '—') + hunt;
+    if (!RF.snapAt) return 'NO FEED';
+    if (age * 1000 > SNAP_FRESH_MS) return 'NO FEED · LAST ' + age + 'S';
+    return RF.order.length + ' AP · 2.4×' + n24 + ' 5×' + n5 + ' · ' + age + 'S' + hunt;
+  }
+  function renderBios() {
+    var d = new Date(), h = d.getHours() % 12; if (h === 0) h = 12;
+    var battV = (S.batt !== null && fresh(T.batt, 120000)) ? S.batt : battPct;
+    var rows = '';
+    rows += '<span class="bl">BATT</span> <span class="bv">' + (battV !== null && battV !== undefined ? battV + '%' : 'NO MEASURE') + '</span><br>';
+    var hrVal, hrTag;
+    if (S.hr !== null && fresh(T.hr, 20000)) { hrVal = S.hr + ' BPM'; hrTag = ' <span class="bl">' + S.hrSrc + '</span>'; }
+    else if (S.hr !== null) { hrVal = 'NO MEASURE'; hrTag = ''; }
+    else { hrVal = '—'; hrTag = ' <span class="bl">' + S.hrState + '</span>'; }
+    rows += '<span data-act="hr" style="cursor:pointer"><span class="bl">HEART RATE</span> <span class="bheart">♥</span> <span class="bv">' + hrVal + '</span>' + hrTag + '</span><br>';
+    rows += '<span class="bl">O2</span> <span class="bv">' + (S.spo2 !== null && fresh(T.spo2, 60000) ? S.spo2 + '%' : 'NO MEASURE') + '</span><br>';
+    rows += '<span class="bl">HRV</span> <span class="bv">' + (S.hrv !== null && fresh(T.hrv, 60000) ? S.hrv + ' MS' : 'NO MEASURE') + '</span><br>';
+    rows += '<span class="bl">STEPS</span> <span class="bv">' + (S.steps !== null && fresh(T.steps, 300000) ? S.steps : 'NO MEASURE') + '</span><br>';
+    rows += '<span class="bl">SLEEP</span> <span class="bv">' + (S.sleep !== null && fresh(T.sleep, 12 * 3600 * 1000) ? fmtSleep(S.sleep) : 'NO MEASURE') + '</span><br>';
+    rows += '<span data-act="gps" style="cursor:pointer"><span class="bl">GPS</span> <span class="bv">' + (S.gps ? S.gps : '—') + '</span>' + (S.gps ? '' : ' <span class="bl">TAP</span>') + '</span><br>';
+    rows += '<span class="bl">NET</span> <span class="bv">' + netText() + '</span><br>';
+    rows += '<span class="bl">RF</span> <span class="bv">' + rfText() + '</span>';
+    // (V6: the bios TIME row is gone — it duplicated the big clock,
+    // and its line was one of the stack the column could not afford.)
+    document.getElementById('bios').innerHTML = rows;
+  }
+  function renderMode() {
+    var parts = [];
+    if (SIM.on) parts.push('SIM');
+    if (BEAT.src === 'BIO') parts.push('♥ BIO ' + (S.hr || '') + ' BPM');
+    else if (BEAT.src === 'APING') parts.push('AP PING · ' + (NET.ssid || 'AP') + ' ' + PING.lastRtt + 'MS');
+    else if (BEAT.src === 'FACTORY') {
+      var ph = Math.floor(factoryPhase01() * FB.pulseMs / 1000);
+      parts.push('♥ FACTORY PULSE ' + pad(Math.floor(ph / 60)) + ':' + pad(ph % 60) + ' / ' + Math.round(FB.pulseMs / 60000) + 'M');
+    } else parts.push('TICK · NO HEARTBEAT FEED');
+    if (INVEST.on) parts.push('INVESTIGATING');
+    var age = RF.snapAt ? Math.floor((Date.now() - RF.snapAt) / 1000) : -1;
+    parts.push((RF.snapAt && age * 1000 <= SNAP_FRESH_MS) ? 'RF ' + RF.order.length + 'AP ' + age + 'S' : 'RF NO FEED');
+    var txt = parts.join(' · ');
+    var el = document.getElementById('mode');
+    if (el.textContent !== txt) el.textContent = txt;
+  }
+  document.getElementById('bios').addEventListener('click', function (ev) {
+    var t = ev.target, root = document.getElementById('bios');
+    while (t && t !== root) {
+      if (t.getAttribute && t.getAttribute('data-act')) {
+        var a = t.getAttribute('data-act');
+        if (a === 'hr' && S.hr === null) connectBT();
+        if (a === 'gps') askGPS();
+        return;
+      }
+      t = t.parentNode;
+    }
+  });
+  function tick() {
+    var d = new Date(), h = d.getHours() % 12; if (h === 0) h = 12;
+    document.getElementById('clock').textContent = h + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    document.getElementById('date').textContent = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+    renderBios();
+    renderMode();
+  }
+  // Bench/debug handle — the face's public state, for proof runs and
+  // the owner's own eyeball. Read-only truth, same numbers the wearer sees.
+  window.__fox = {
+    state: function () {
+      return {
+        beat: BEAT.src,
+        ping: { n: PING.series.length, lastRtt: PING.lastRtt, jitter: pingJitter() },
+        heading: FRAME.headingDeg,
+        beatPhase: BEAT.src === 'FACTORY' ? Math.round(factoryPhase01() * 1000) / 1000 : null,
+        rfAgeS: RF.snapAt ? Math.round((Date.now() - RF.snapAt) / 100) / 10 : null,
+        apCount: RF.order.length,
+        pinCount: Object.keys(RF.pins).length,
+        invest: INVEST.on,
+        hunt: HUNT.bssid,
+        huntScore: Math.round(HUNT.score * 100) / 100,
+        scanAttempts: SCAN.attempts,
+        scanMissed: SCAN.missed,
+        fixes: FRAME.fixes,
+        course: FRAME.courseDeg,
+        sim: SIM.on,
+        net: netText(),
+        mode: document.getElementById('mode').textContent,
+        tiles: document.getElementById('bios').textContent.replace(/\s+/g, ' ').trim()
+      };
+    },
+    pins: function () {
+      var out = [];
+      for (var k in RF.pins) {
+        var p = RF.pins[k];
+        out.push({ key: k, ssid: p.ssid, band: p.bandGhz, ch: p.channel, rssi: p.rssi, samples: p.samples, solved: !!p.solved, firm: Math.round(pinFirm(p) * 100) / 100, px: Math.round(p._px), py: Math.round(p._py) });
+      }
+      return out;
+    },
+    select: function (bssid) { HUNT.bssid = bssid || null; renderBios(); },
+    investigate: function (on) { setInvest(!!on); },
+    census: function (on) { setCensus(!!on); },
+    censusState: function () {
+      var d = censusData();
+      return {
+        on: CENSUS.on,
+        wifiNew: d.wifiNew, wifiTotal: d.wifiTotal,
+        bt: d.btTotal, cell: d.cellTotal,
+        notable: d.notable.map(function (r) { return { name: r.name, tag: r.tag, rssi: r.rssi, reasons: r.reasons }; }),
+        firstLogCount: d.firstLog.length,
+        snapDay: d.snapDay,
+        panel: document.getElementById('census').textContent.replace(/\s+/g, ' ').trim()
+      };
+    }
+  };
+  // ================================================================
+  // TABLE SERVICE (V6) — ONE 1 s service timer runs the house, at
+  // FULL data quality: prepare the plate (every bridge read, the
+  // ladder evaluated, the scan supervisor ticked), serve the meal
+  // (clock, bios, mode, draw loops started), remove the plate (the
+  // draw loops stop THEMSELVES when their state goes still or the
+  // face hides), clean it, invite back in one second — ad
+  // infinitum. Nothing is thinned or downsampled; the rich data
+  // and the come-and-go all still arrive. What changed is that the
+  // face no longer grazes between meals. While hidden the service
+  // itself sleeps — a closed face leaves NOTHING running for the
+  // device optimizer to forgive (THE LOKMAT STANDARD, owner field
+  // benchmark, Nov 15, 2026). One deliberate exception: an active
+  // hunt the wearer opened runs its own 700 ms haptics session
+  // timer, started and cleared WITH the hunt — a session with a
+  // setup and a teardown, not a grazing loop.
+  // (V5 cadence, for the record: 250 ms tick + 500 ms bridge reads
+  // + 500 ms scan supervisor + 700 ms hunt + 30 s factory fetch,
+  // all free-running, all awake while hidden, three rAF loops
+  // re-queueing into the dark.)
+  // ================================================================
+  var huntTimer = null;
+  function manageHuntTimer() {
+    var want = !!(INVEST.on && HUNT.bssid && !document.hidden);
+    if (want && !huntTimer) huntTimer = setInterval(huntTick, 700);
+    if (!want && huntTimer) { clearInterval(huntTimer); huntTimer = null; }
+  }
+  function serviceDraws() {
+    if (document.hidden) return;
+    if (!RUN.scope) { RUN.scope = true; requestAnimationFrame(drawScope); }
+    if (!RUN.pulse) { RUN.pulse = true; requestAnimationFrame(drawPulse); }
+    if (!RUN.freq) { RUN.freq = true; requestAnimationFrame(drawFreq); }
+  }
+  function service() {
+    if (document.hidden) { manageHuntTimer(); return; }
+    readBridge(); readWifi(); readNet(); readBeat(); readPing(); evalBeat();
+    tick();
+    tickScan();
+    fetchFactory();
+    manageHuntTimer();
+    serviceDraws();
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (navigator.vibrate) { try { navigator.vibrate(0); } catch (e) {} }
+      manageHuntTimer(); // stops NOW; the draw loops stop themselves next frame and do not re-queue
+    } else {
+      layout();
+      service(); // a fresh plate the moment the face returns
+    }
+  });
+  // ---- boot
+  layout();
+  window.addEventListener('resize', layout);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', layout);
+  service();
+  setInterval(service, 1000);
+  setInterval(function () { if (!document.hidden) censusTick(); }, 500); // census merge: the panel's freshness tick rides its own beat
+  fetchWX(); setInterval(fetchWX, 900000);
+  if (navigator.getBattery) {
+    navigator.getBattery().then(function (b) {
+      var el = document.getElementById('batt');
+      function upd() {
+        battPct = Math.round(b.level * 100);
+        stamp('batt', battPct, 0);
+        S.batt = battPct;
+        el.textContent = battPct + '%';
+        renderBios();
+      }
+      upd(); b.addEventListener('levelchange', upd);
+    }).catch(function () { /* no battery hook — BATT row reads NO MEASURE */ });
+  }
+</script>
+
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+</body></html>

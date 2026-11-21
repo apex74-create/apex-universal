@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Betta Ultra Deluxe \u00b7 Apex Universal",
+ "short_name": "Betta Ultra Deluxe",
+ "description": "Betta Ultra Deluxe V3.1 (Nov 10, 2026) \u2014 V3 as field-verified by the owner (electrocution ceremony, dim-with-fish-visible, wake on touch; ruled a go to hang), plus the APEX FRAME layer: the engine face family's LOKMAT FRAME (chunky case, hex bolts, ADJUST/MODE/LIGHT/START\u00b7STOP) ported 1:1 at 640x480",
+ "start_url": "betta-ultra-deluxe.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

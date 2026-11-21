@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 UAP Hero V2 \u00b7 Apex Universal",
+ "short_name": "UAP Hero V2",
+ "description": "UAP hero face V2 \u2014 more stars, layered spinning galaxy arms, saucers fighting triangles, grays fighting mantids (owner's Nov 11 beats).",
+ "start_url": "uap-hero-face-v2.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

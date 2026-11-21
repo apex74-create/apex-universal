@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 P&W J58 Dark Edition \u00b7 Apex Universal",
+ "short_name": "P&W J58 Dark Edition",
+ "description": "Motors Under Glass, Dark Edition (Nov 20, 2026): the whole J58 machine \u2014 both views, flow and random ingest \u2014 carried onto blackened plates. The dark twin of the J58 seat.",
+ "start_url": "j58-dark.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

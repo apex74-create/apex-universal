@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Signal Scope V2 \u00b7 Apex Universal",
+ "short_name": "Signal Scope V2",
+ "description": "Headline face: green radar scope + heartbeat pulse strip. Carries the D3 honesty rails on its face (signal presence only, no position fix). Supersedes Signal Scope V1.",
+ "start_url": "signal-scope.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

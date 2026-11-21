@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Wish Face \u00b7 Apex Universal",
+ "short_name": "Wish Face",
+ "description": "Wish Face (Nov 11, 2026) - Package Scope Inspector BUILD ORDER BO-5: the Wish Picker on the wrist. THE TEAM LAW (owner): the face tells time and carries the day's wish; the picker app and the results board are the working surfaces. A CARE face first: the Wish Picker's real purpose (owner, Nov 7, 202",
+ "start_url": "wish-face.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 UAP ISS Edition V2 \u00b7 Overhead Pass \u00b7 Apex Universal",
+ "short_name": "UAP ISS Edition V2 \u00b7 Ove",
+ "description": "ISS edition V2 (Nov 12) rebuilt Nov 13 to the owner's arch spec: a globe in space that turns beneath the station (always in view, real telemetry), the hemisphere march from the equator line, and the arch across the top of the face that lights ONLY on a true overhead pass for the viewer's own locatio",
+ "start_url": "uap-iss-face-v2.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

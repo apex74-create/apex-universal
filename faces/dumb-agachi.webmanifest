@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Dumb Agachi \u00b7 Apex Universal",
+ "short_name": "Dumb Agachi",
+ "description": "A virtual pony on the wrist: a foal with hunger, mood and energy meters and feed, play and pet actions, with the clock.",
+ "start_url": "dumb-agachi.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

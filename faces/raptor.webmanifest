@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Raptor \u00b7 Apex Universal",
+ "short_name": "Raptor",
+ "description": "Motors Under Glass series: the Raptor, full-flow staged combustion, with the clock.",
+ "start_url": "raptor.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

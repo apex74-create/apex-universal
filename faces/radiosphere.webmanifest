@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Radiosphere \u00b7 Apex Universal",
+ "short_name": "Radiosphere",
+ "description": "Radiosphere (Nov 16, 2026) - the signal-sphere face: the owner's bench proof of the same name (spinning sphere, height = strength, colour = plane) wired for production to the APEX SCAN FEED contract v1, the same contract Globe Tracker reads. The face paints ONLY what the shell publishes and re-reads",
+ "start_url": "radiosphere.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

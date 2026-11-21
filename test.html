@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cross-Container Test Protocol — Apex Universal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#07130b">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{--bg:#050807;--panel:#0a120c;--line:#1d3320;--ink:#d8f5dc;--dim:#8fbf97;--grn:#39ff6a;--amber:#ffc857}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+header{padding:28px 18px 10px;max-width:1060px;margin:0 auto}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:.04em}h1 .u{color:var(--grn)}
+.sub{color:var(--dim);margin:0 0 6px}.addr{color:var(--amber);font-family:ui-monospace,Menlo,Consolas,monospace}
+main{max-width:1060px;margin:0 auto;padding:0 18px 40px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.panel h2{font-size:16px;margin:0 0 8px;color:var(--grn)}
+.panel p{margin:6px 0}.small{font-size:13px;color:var(--dim)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--amber);word-break:break-all}
+button,.btn{display:inline-block;background:#0e2413;color:var(--grn);border:1px solid var(--grn);border-radius:999px;
+padding:7px 14px;font-size:13.5px;cursor:pointer;text-decoration:none;margin:3px 4px 3px 0}
+button:hover,.btn:hover{background:#14301a}.btn.apk{border-color:var(--amber);color:var(--amber)}
+input[type=search]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#07130b;color:var(--ink);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+.card h3{margin:0 0 2px;font-size:15.5px}.card .title{color:var(--dim);font-size:12.5px;margin:0 0 6px}
+.price{color:var(--grn);font-weight:700}.status{color:var(--amber);font-size:12px;letter-spacing:.06em}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:11.5px;color:var(--dim);margin:2px 3px 2px 0}
+.note{font-size:12.5px;color:var(--dim);margin:7px 0}
+footer{max-width:1060px;margin:0 auto;padding:0 18px 34px;color:var(--dim);font-size:12.5px}
+a{color:var(--grn)}
+
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid var(--line);padding:5px 7px;text-align:left}
+th{color:var(--grn)}td.c{text-align:center;font-size:15px}ol li{margin:5px 0}
+</style>
+</head>
+<body>
+<header><h1>CROSS-CONTAINER <span class="u">TEST PROTOCOL</span></h1>
+<p class="sub">The third set gets proven the way the house proves everything: on real handsets, both platforms, face by face.</p>
+<p class="addr">universal.apex-airsolutions.com</p></header>
+<main>
+<section class="panel"><h2>The testers</h2>
+<p><strong>Android seat — the owner</strong>, on his handset. <strong>Apple seat — Kevin</strong>, full operator
+licence, on his Apple device. Same address, same shelf, same faces. Each tester works the full 56.</p></section>
+<section class="panel"><h2>Android run (owner)</h2><ol>
+<li>Open <strong>universal.apex-airsolutions.com</strong> in Chrome. Confirm the shelf reads 56 faces.</li>
+<li>Open a face. Install it: browser menu → <em>Install app</em> (or accept the prompt). Confirm the icon lands on the home screen.</li>
+<li>Launch from the icon. PASS needs: full-screen, no browser bar; the clock live and ticking; the face's own function answering.</li>
+<li><strong>Scan step:</strong> on the same card, download the depot Android APK. Verify the file's SHA-256 against the hash printed on the card before installing (any hash-checker app). Install the APK and run it — the same face in the native container.</li>
+<li>Airplane mode on. Relaunch the web container from its icon: it must open and run offline (the service worker carries it).</li>
+<li>Grade the face in the table: Container install · Runs · Offline · APK scan+run. Any failure gets its symptom written in Notes, in plain words.</li>
+</ol></section>
+<section class="panel"><h2>Apple run (Kevin)</h2><ol>
+<li>Open <strong>universal.apex-airsolutions.com</strong> in Safari. Confirm the shelf reads 56 faces.</li>
+<li>Open a face. Tap <strong>Share → Add to Home Screen</strong>. Confirm the icon lands.</li>
+<li>Launch from the icon. PASS needs: full-screen standalone, no Safari bar; the clock live; the face's own function answering.</li>
+<li>Airplane mode on. Relaunch from the icon: it must open and run offline.</li>
+<li>Grade the face in the table. Apple has no APK column — the web container is Apple's container, and that is the point of the set.</li>
+</ol></section>
+<section class="panel"><h2>What PASS means, per face</h2>
+<p>Installs from this one address · launches standalone · clock live · its listed function responds ·
+offline relaunch works · layout holds at the device size, nothing overlapping, nothing cut.
+A face that fails any leg is a FAIL with the symptom named — never a quiet pass.</p>
+<p class="small">Known platform truth, stated before the test so nobody grades it as a defect: iOS gives no
+install prompt (the two Share taps are the road), and faces whose functions read device bridges
+(Wi-Fi scan class) answer through the native container on Android; in a web container they read
+their honest NO MEASURE, exactly as they do on the depot shelf.</p></section>
+<section class="panel"><h2>The 56 — grade sheet</h2>
+<table><tr><th>#</th><th>Face</th><th>Slug</th><th>Install</th><th>Runs</th><th>Offline</th><th>APK (Android)</th><th>Notes</th></tr>
+<tr><td>1</td><td>Apex Face — Solid</td><td>personal-face-solid</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>2</td><td>Apex Face — Signal Scope V4</td><td>signal-scope-v4</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>3</td><td>Apex Face — Machinery Clock Square</td><td>machinery-clock-square</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>4</td><td>Apex Face — APEX Weather</td><td>apex-weather</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>5</td><td>Apex Face — Glass House Betta V2</td><td>betta-v2</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>6</td><td>Apex Face — BLOCKS</td><td>blocks</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>7</td><td>Apex Face — Glass House Flagship</td><td>glass-house-flagship</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>8</td><td>Apex Face — Glass House Flagship Machinery</td><td>glass-house-flagship-machinery</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>9</td><td>Apex Face — Glass House Flagship Dark</td><td>glass-house-flagship-dark</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>10</td><td>Apex Face — Barracuda</td><td>barracuda</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>11</td><td>Apex Face — Dumb Agachi</td><td>dumb-agachi</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>12</td><td>Apex Face — J58</td><td>j58</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>13</td><td>Apex Face — J79 Blackbird</td><td>j79-blackbird</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>14</td><td>Apex Face — Lamborghini V12</td><td>lamborghini-v12</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>15</td><td>Apex Face — Raptor</td><td>raptor</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>16</td><td>Apex Face — Betta Ultra Deluxe City</td><td>betta-city</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>17</td><td>Apex Face — Betta Ultra Deluxe Globe</td><td>betta-globe</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>18</td><td>Apex Face — Betta Ultra Deluxe Gears</td><td>betta-ultra-deluxe-gears</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>19</td><td>Apex Face — Betta Ultra Deluxe Reef</td><td>betta-ultra-deluxe-reef</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>20</td><td>Apex Face — Cast Net</td><td>cast-net</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>21</td><td>Apex Face — Deep Space Wallpaper</td><td>deep-space-wallpaper</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>22</td><td>Apex Face — Globe Tracker</td><td>globe-tracker</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>23</td><td>Apex Face — The 19</td><td>the-19</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>24</td><td>Apex Face — UAP Space Scene</td><td>uap-space-scene</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>25</td><td>Apex Face — Glass House Flagship Dark Suite</td><td>glass-house-flagship-dark-suite</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>26</td><td>Apex Face — Betta Ultra Deluxe</td><td>betta-ultra-deluxe</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>27</td><td>Apex Face — Wish Face</td><td>wish-face</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>28</td><td>Apex Face — Waterfall LIVE · SCOPE</td><td>scope</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>29</td><td>Apex Face — Signal Scope V2</td><td>signal-scope</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>30</td><td>Apex Face — Signal Watch</td><td>signal-watch</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>31</td><td>Apex Face — UAP Hero</td><td>uap-hero-face</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>32</td><td>Apex Face — UAP Hero V2</td><td>uap-hero-face-v2</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>33</td><td>Apex Face — UAP ISS Edition</td><td>uap-iss-face</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>34</td><td>Apex Face — UAP ISS Edition V2 · Overhead Pass</td><td>uap-iss-face-v2</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>35</td><td>Apex Face — Betta Hyperdetail Freefloat</td><td>betta-hyperdetail-freefloat</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>36</td><td>Apex Face — Machinery Clock</td><td>machinery-clock</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>37</td><td>Apex Face — Motion Wallpaper</td><td>motion-wallpaper</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>38</td><td>Apex Face — Condensed Engine Wallpaper</td><td>condensed-engine-wallpaper</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>39</td><td>Apex Face — Holly's Face</td><td>hollys-face</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>40</td><td>Apex Face — The Sextant</td><td>the-sextant</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>41</td><td>Apex Face — Radiosphere</td><td>radiosphere</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>42</td><td>Apex Face — Hero P-39D Airacobra</td><td>hero-p39</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>43</td><td>Apex Face — Hero F4U Corsair</td><td>hero-corsair</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>44</td><td>Apex Face — Hero F-14 Tomcat</td><td>hero-f14</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>45</td><td>Apex Face — Hot Rod Rat Rod</td><td>hotrod-ratrod</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>46</td><td>Apex Face — Hot Rod Blown Drag</td><td>hotrod-blown</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>47</td><td>Apex Face — Hot Rod Full Coupe</td><td>hotrod-coupe</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>48</td><td>Apex Face — SpaceX Launch Watch</td><td>spacex-launch-watch</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>49</td><td>Apex Face — Tesla Scope</td><td>tesla-scope</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>50</td><td>Apex Face — P&amp;W J58 Dark Edition</td><td>j58-dark</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>51</td><td>Apex Face — GE J79 Dark Edition</td><td>j79-dark</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>52</td><td>Apex Face — Raptor Dark Edition</td><td>raptor-dark</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>53</td><td>Apex Face — Propeller &amp; Gears</td><td>prop-gear</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>54</td><td>Apex Face — War Corsair Cowling</td><td>war-corsair</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>55</td><td>Apex Face — War P51 Cowling</td><td>war-p51</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>56</td><td>Apex Face — Ultralight Wireframe Helicopter</td><td>ultralight-wireframe</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+</table></section>
+</main>
+<footer><p><a href="index.html">Back to the shelf</a> · Apex Air Solutions · The protocol also lives in the repo as PROTOCOL.md.</p></footer>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+</body></html>

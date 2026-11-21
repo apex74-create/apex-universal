@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Deep Space Wallpaper \u00b7 Apex Universal",
+ "short_name": "Deep Space Wallpaper",
+ "description": "Deep Space Wallpaper (Nov 10, 2026) \u2014 the owner's brief minutes after his wrist verdict on UAP Space Scene V2 (21:24-21:29 EST): straight up the wallpaper \u2014 the actual V2 living scene running edge-to-edge as the whole glass, a large digital clock front and centre, the randomness going by, plus extra",
+ "start_url": "deep-space-wallpaper.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

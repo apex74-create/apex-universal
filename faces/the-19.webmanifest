@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 The 19 \u00b7 Apex Universal",
+ "short_name": "The 19",
+ "description": "The 19 (Nov 10, 2026) - Package Scope Inspector BUILD ORDER BO-1 (Specimen Zero, verdict PLUG): the estate's first LAUNCHER FACE. The Castnet plate (Hierographic Plate 3: the wrist communicator casting the green mesh over drones at sunset; protected asset src/assets/hero-wrist-castnet.jpg used read-",
+ "start_url": "the-19.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

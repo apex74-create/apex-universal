@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Signal Watch \u00b7 Apex Universal",
+ "short_name": "Signal Watch",
+ "description": "Signal Watch weather face (Nov 12, 2026) - the Apex Signal Watch build's standalone watch page (public/watch.html @ main ca99adab), isolated as its own gallery face under owner order Nov 11-12, 2026. This is the face in the owner's Nov 6, 2026 LOKMAT field photo, line for line, and every photo line ",
+ "start_url": "signal-watch.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

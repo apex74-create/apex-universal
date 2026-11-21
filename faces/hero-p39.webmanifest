@@ -1,0 +1,29 @@
+{
+ "name": "Apex Face \u2014 Hero P-39D Airacobra \u00b7 Apex Universal",
+ "short_name": "Hero P-39D Airacobra",
+ "description": "Hero Line (Nov 20, 2026): the P-39D Airacobra, nose-on \u2014 the owner's favourite \u2014 in 1950s airbrush nose-art flavour, with the APEX COBRAS patch inset (original house design), a compass dial, and the time in analog and digital. Hero art generated on the house station from pooled photographic referenc",
+ "start_url": "hero-p39.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#050807",
+ "theme_color": "#07130b",
+ "icons": [
+  {
+   "src": "../icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "../icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
